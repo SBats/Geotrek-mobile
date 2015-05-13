@@ -11,13 +11,13 @@ var geotrekAppSettings = angular.module('geotrekAppSettings', []);
 // so we put in globalSettings some project constants.
 geotrekAppSettings.constant('globalSettings', {
     DEFAULT_LANGUAGE: 'fr',
-    DOMAIN_NAME: 'http://rando-cg44.makina-corpus.net/data'
+    DOMAIN_NAME: 'http://itinerance.alpesrando.net/data'
 })
 .factory('settings', function () {
 
     // Variables that user can change
-    var DOMAIN_NAME = /*'http://geotrek-admin.alpesrando.net',*/'http://rando-cg44.makina-corpus.net/data',
-        PUBLIC_WEBSITE = /*'http://itinerance.alpesrando.net',*/'http://rando-cg44.makina-corpus.net',
+    var DOMAIN_NAME = 'http://itinerance.alpesrando.net/data',
+        PUBLIC_WEBSITE = 'http://itinerance.alpesrando.net',
         API_FOLDER = 'api',
         FORCE_DOWNLOAD = false,
         DEBUG = false,
@@ -28,14 +28,14 @@ geotrekAppSettings.constant('globalSettings', {
         POI_ALERT_RADIUS = 0.05;  // in km
 
     var leaflet_conf = {
-        GLOBAL_MAP_CENTER_LATITUDE: 44.83,
-        GLOBAL_MAP_CENTER_LONGITUDE: 6.34,
+        GLOBAL_MAP_CENTER_LATITUDE: 44.50,
+        GLOBAL_MAP_CENTER_LONGITUDE: 6.32,
         GLOBAL_MAP_DEFAULT_ZOOM: 12,
         GLOBAL_MAP_DL_TILES_ZOOM: 12,
         GLOBAL_MAP_DEFAULT_MIN_ZOOM: 8,
         GLOBAL_MAP_DEFAULT_MAX_ZOOM: 16,
         GLOBAL_MAP_ATTRIBUTION: '(c) IGN Geoportail',
-        TREK_COLOR: '#aec900',
+        TREK_COLOR: '#006591',
         HIGHLIGHT_DETAIL_LINEAR: true,
         HIGHLIGHT_COLOR: '#000000'
     };
@@ -76,7 +76,7 @@ geotrekAppSettings.constant('globalSettings', {
         TREKS_ZIP_NAME = 'global.zip',
         TILES_FILE_NAME = 'global.zip';
 
-    var GEOTREK_DIR = 'rando-loire-atlantique',
+    var GEOTREK_DIR = 'alpes-rando',
         API_DIR = 'api',
         LANG_DIR = 'fr',
         MEDIA_DIR = 'media',
@@ -84,7 +84,7 @@ geotrekAppSettings.constant('globalSettings', {
         PAPERCLIP_DIR = 'paperclip',
         MEDIA_TREK_DIR = 'trekking_trek',
         MEDIA_POI_DIR = 'trekking_poi',
-        LOGS_FILENAME = 'rando-loire-atlantique.log',
+        LOGS_FILENAME = 'alpes-rando.log',
         TILES_DIR = 'tiles',
         TREK_DIR = 'treks',
         POI_DIR = 'poi',

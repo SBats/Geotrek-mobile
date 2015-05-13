@@ -78,7 +78,7 @@ body {
 }
 
 .menu-left {
-    background: $secondaryColor;
+    background: $primaryColor;
 
     .scroll-content {
         padding: 0 10px;
@@ -94,6 +94,8 @@ body {
   max-height: 24px;
   max-width: 100%;
   vertical-align: middle;
+  font-size: 1rem;
+  font-weight: bolder;
 }
 
 .bar-header {

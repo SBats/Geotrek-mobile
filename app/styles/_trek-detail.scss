@@ -158,20 +158,20 @@
 		height: 40px;
 		line-height: 40px;
 		&:first-child {
-			border-right: 1px solid $grayLight;
+			border-right: 1px solid white;
 			i {
 		  		margin-right: 2px;
 			}
 		}
 		&:last-child {
-			border-left: 1px solid $grayLight;
+			border-left: 1px solid white;
 			i {
 		  		margin-left: 2px;
 			}
 		}
 	}
 	i {
-		color: $primaryColor;
+		color: white;
 		display: block;
 		font-size: 28px;
 	}
@@ -188,8 +188,8 @@
 		-o-text-overflow: ellipsis; /* pour Opera 9 */
   		text-overflow: ellipsis;
 	}
-	color: $primaryColor;
-	background: $dark;
+	color: white;
+	background: $primaryColor;
 }
 
 .children-detail, .parent-detail {

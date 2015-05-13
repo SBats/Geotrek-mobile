@@ -2,20 +2,20 @@
 // Variables
 // --------------------------------------------------
 
-$primaryColor:			$green;
-$secondaryColor:		$greenDarker;
+$primaryColor:			#006591;
+$secondaryColor:		#333333;
 $complementaryColor:    white;
 $complementaryColor2:   grey;
 $complementaryColor3:   #F07F00;
 $complementaryColor4:   #1C72BC;
 $complementaryColor5:   #E0CDA9;
 
-$tabs-color:			$dark;
-$tabs-border-color:		$complementaryColor;
-$tabs-border-active-color: $primaryColor;
+$tabs-color:			$primaryColor;
+$tabs-border-color:		$dark;
+$tabs-border-active-color: white;
 
 $icon-bt-color:			$dark;
-$highlight-text-color:  $green;
+$highlight-text-color:  $primaryColor;
 
-$menu-left-bg: 			$secondaryColor;
+$menu-left-bg: 			$primaryColor;
 $loading-bar-color:     $primaryColor;
