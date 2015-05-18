@@ -1,0 +1,13 @@
+<ion-view view-title="Trek">
+    <ion-nav-buttons side="right">
+        <button class="button {{ isFavorite ? 'is_favorite' : '' }}" id="favorite_btn" ng-click="addToFavorites()">
+        	Favoriser
+        </button>
+        <button class="button">
+        	Télécharger
+        </button>
+    </ion-nav-buttons>
+    <ion-content overflow-scroll="false">
+        Détail du trek : "{{ trek.properties.name }}"
+    </ion-content>
+</ion-view>

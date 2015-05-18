@@ -1,0 +1,13 @@
+.filter {
+	height: 50px;
+}
+
+.filter .option {
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid grey;
+}
+
+.filter .option.selected {
+	background-color: #DDDDDD;
+}

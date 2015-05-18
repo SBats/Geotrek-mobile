@@ -1,0 +1,11 @@
+<ion-view>
+   	<ion-content overflow-scroll="false">
+   		<div class="filter" ng-repeat="(filter, options) in filters">
+   			<div class="float_left option {{ value.isActive ? 'selected' : '' }}" ng-repeat="(option, value) in options"
+   			ng-click="setOption(filter, option)">
+   				{{ option }}
+   			</div>
+   		</div>
+   		Nombre de résultats : {{ nbResults }}
+	</ion-content>
+</ion-view>

@@ -1,4 +1,12 @@
 {
-  "name": "Geotrek-mobile-v2",
-  "app_id": ""
+  "name": "app",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/*",
+    "!www/lib/**/*",
+    "!www/app/**/*"
+  ]
 }

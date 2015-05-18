@@ -1,4 +1,10 @@
 platforms/
 plugins/
 node_modules/
+maps/
+.DS_Store
 .bowerrc
+
+www/app.js
+www/app-vendors.js
+www/app.css
