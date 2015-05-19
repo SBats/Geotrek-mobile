@@ -4,7 +4,7 @@ var controller = require('./controllers');
 
 function layoutRoutes($locationProvider, $stateProvider, $urlRouterProvider) {
 
-    //$urlRouterProvider.otherwise('/treks');
+    $urlRouterProvider.otherwise('/map');
 
     $stateProvider
         .state('root', {

@@ -45,8 +45,9 @@ function favoritesService($q, TreksService) {
 		self.favoritesId.splice(self.favoritesId.indexOf(id), 1);
 		window.localStorage['favorites'] = JSON.stringify(self.favoritesId);
 		self.loadFavorites();
-	}
+	};
 
+	// Adds or removes a favorite depending if it already is a favorite
 	this.changeFavorites = function (id) {
 		if (self.isFavorite(id)) {
 			self.removeFavorite(id);
@@ -59,4 +60,4 @@ function favoritesService($q, TreksService) {
 
 module.exports = {
 	favoritesService: favoritesService
-}
+};
