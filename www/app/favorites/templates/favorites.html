@@ -1,7 +1,7 @@
 <ion-view view-title="Mes randos">
    	<ion-content overflow-scroll="false">
 	    <ul class="list">
-	        <li ng-repeat="trek in treks" ui-sref="app.detail_text({ trekId: trek.id })" class="item-thumbnail-left item">
+	        <li ng-repeat="trek in treks" ui-sref="root.detailed_trek({ trekId: trek.id })" class="item-thumbnail-left item">
 	            <img class="thumbnail" ng-src="{{ trek.properties.thumbnail }}"/>
 	            <h3>{{ trek.properties.name }}</h3>
 	            <p class="departure">{{ 'trek_list.departure' }} : {{ trek.properties.departure }}</p>

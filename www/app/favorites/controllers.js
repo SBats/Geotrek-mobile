@@ -11,8 +11,9 @@ function favoritesController($rootScope, $scope, $state, FavoritesService) {
 	refreshFavorites();
 
 	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		if (toState.name === 'root.favorites')
+		if (toState.name === 'root.favorites') {
 			refreshFavorites();
+		}
 	});
 
 }

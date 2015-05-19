@@ -1,6 +1,6 @@
 'use strict';
 
-function leafletService(settings, utils, FiltersFactory, IconsService) {
+function leafletService($state, settings, utils, FiltersFactory, IconsService) {
 
 	var self = this;
 
@@ -26,22 +26,20 @@ function leafletService(settings, utils, FiltersFactory, IconsService) {
     };
 
     // Place each trek's departure marker on the map
-    this.placeGlobalMarkers = function (map) {
+    this.getMarkerFromTrek = function (trek) {
     	var coord;
+        var marker;
 
-    	FiltersFactory.getFilteredTreks().then(function (treks) {
-    		angular.forEach(treks, function (trek) {
-    			coord = utils.getStartPoint(trek);
-    			L.marker([coord.lat, coord.lng], { icon: IconsService.getDepartureIcon() }).addTo(map);
-    		});
-    	});
+        coord = utils.getStartPoint(trek);
+        marker = L.marker([coord.lat, coord.lng], { icon: IconsService.getDepartureIcon() });
+        return (marker);
     };
 }
 
 /**
  * Service that persists and retrieves treks from data source
  */
-function iconsService() {
+ function iconsService() {
 
     var trek_icons = {
         default_icon: {},
