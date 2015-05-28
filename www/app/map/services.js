@@ -1,38 +1,61 @@
 'use strict';
 
-function leafletService($state, settings, utils, FiltersFactory, IconsService) {
+function leafletService($state, constants, settings, utils, FiltersFactory, IconsService) {
 
 	var self = this;
 
-	// Initialiaze the map with default values
+    // Initialiaze the map with default values
 	self.map = L.map('map', {
-		scrollWheelZoom: true,
-		zoomControl: false,
-		layers: L.tileLayer(settings.leaflet.LEAFLET_BACKGROUND_URL)
-	});
-	L.Icon.Default.imagePath = './img/map';
+        center: [constants.leaflet.GLOBAL_MAP_CENTER_LATITUDE, constants.leaflet.GLOBAL_MAP_CENTER_LONGITUDE],
+        minZoom: constants.leaflet.GLOBAL_MAP_DEFAULT_MIN_ZOOM,
+        maxZoom: constants.leaflet.GLOBAL_MAP_DEFAULT_MAX_ZOOM,
+        scrollWheelZoom: true,
+        zoomControl: false,
+        layers: L.tileLayer(constants.leaflet.LEAFLET_BACKGROUND_URL)
+    });
+    self.treksOnMap = new L.featureGroup();
 
     // Returns the map
     this.getMap = function () {
     	return (self.map);
     };
 
-    // Sets the defaut position and zoom level when the view is global
-    this.setGlobalSettings = function (map) {
-    	map.setView([settings.leaflet.GLOBAL_MAP_CENTER_LATITUDE, settings.leaflet.GLOBAL_MAP_CENTER_LONGITUDE],
-    		settings.leaflet.GLOBAL_MAP_DEFAULT_ZOOM);
-    	map._layersMinZoom = settings.leaflet.GLOBAL_MAP_DEFAULT_MIN_ZOOM;
-    	map._layersMaxZoom = settings.leaflet.GLOBAL_MAP_DEFAULT_MAX_ZOOM;
-    };
-
-    // Place each trek's departure marker on the map
-    this.getMarkerFromTrek = function (trek) {
-    	var coord;
+    // Sets markers on each trek's starting point
+    this.makeTreksLayer = function () {
         var marker;
 
-        coord = utils.getStartPoint(trek);
-        marker = L.marker([coord.lat, coord.lng], { icon: IconsService.getDepartureIcon() });
-        return (marker);
+        FiltersFactory.getFilteredTreks().then(function (treks) {
+            angular.forEach(treks, function (trek) {
+                marker = utils.getMarkerFromTrek(trek);
+                marker.on('mousedown', function () {
+                    $state.go('root.map.detailed', { trekId: trek.id });
+                });
+                self.treksOnMap.addLayer(marker);
+            });
+            self.map.addLayer(self.treksOnMap);
+        });
+    };
+
+    // Sets the defaut position and zoom level when the view is global
+    this.setGlobalSettings = function () {
+        self.treksOnMap.clearLayers();
+    	self.map.setView([constants.leaflet.GLOBAL_MAP_CENTER_LATITUDE, constants.leaflet.GLOBAL_MAP_CENTER_LONGITUDE],
+    		constants.leaflet.GLOBAL_MAP_DEFAULT_ZOOM);
+    	self.map._layersMinZoom = constants.leaflet.GLOBAL_MAP_DEFAULT_MIN_ZOOM;
+    	self.map._layersMaxZoom = constants.leaflet.GLOBAL_MAP_DEFAULT_MAX_ZOOM;
+    };
+
+    // Centers the map on the trek and zooms on it
+    this.setDetailedSettings = function (trek) {
+        var coord = utils.getStartPoint(trek);
+
+        self.treksOnMap.clearLayers();
+        self.map.setView([coord.lat, coord.lng], constants.leaflet.GLOBAL_MAP_DEFAULT_ZOOM);
+        setTimeout(function () {
+            self.map.setZoomAround([coord.lat, coord.lng], constants.leaflet.DETAILED_MAP_DEFAULT_ZOOM);
+            self.map._layersMinZoom = constants.DETAILED_MAP_DEFAULT_MIN_ZOOM;
+            self.map._layersMaxZoom = constants.DETAILED_MAP_DEFAULT_MAX_ZOOM;
+        }, 1000);
     };
 }
 

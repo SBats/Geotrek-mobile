@@ -35,13 +35,13 @@ function filtersFactory($q, TreksService) {
 
 		TreksService.getTreks().then(function (treks) {
 			angular.forEach(treks.features, function (trek) {
-				if (!filters.difficulties[trek.properties.difficulty.label]) {
+				if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
 					filters.difficulties[trek.properties.difficulty.label] = {
 						isActive: false,
 						id: trek.properties.difficulty.id
 					};
 				}
-				if (!filters.practices[trek.properties.practice.label]) {
+				if (trek.properties.practice && !filters.practices[trek.properties.practice.label]) {
 					filters.practices[trek.properties.practice.label] = {
 						isActive: false,
 						id: trek.properties.practice.id
@@ -64,19 +64,27 @@ function filtersFactory($q, TreksService) {
 		return (allFalse);
 	};
 
-	//Checking functions for all the filters
+	//Checking functions for all the filters.
+	//If an information is missing on a trek, it is considered
 	var checkDifficulty = function (trek) {
-		return (checkAllFalse(filters.difficulties) || filters.difficulties[trek.properties.difficulty.label].isActive);
+		return (checkAllFalse(filters.difficulties)
+			|| !trek.properties.difficulty
+			|| filters.difficulties[trek.properties.difficulty.label].isActive);
 	};
 
 	var checkTime = function (trek) {
-		var duration = (trek.properties.duration < 6) ? '-6h' : ((trek.properties.duration < 12) ? '6h - 12h' : '+12h');
+		var duration;
 
+		if (!trek.properties.duration)
+			return (true);
+		duration = (trek.properties.duration < 6) ? '-6h' : ((trek.properties.duration < 12) ? '6h - 12h' : '+12h');
 		return (checkAllFalse(filters.durations) || filters.durations[duration].isActive);
 	};
 
 	var checkPractice = function (trek) {
-		return (checkAllFalse(filters.practices) || filters.practices[trek.properties.practice.label].isActive);
+		return (checkAllFalse(filters.practices)
+			|| !trek.properties.practice
+			|| filters.practices[trek.properties.practice.label].isActive);
 	};
 
 	//Gets the treks after applying the filters
@@ -106,4 +114,4 @@ function filtersFactory($q, TreksService) {
 
 module.exports = {
 	filtersFactory: filtersFactory
-}
+};

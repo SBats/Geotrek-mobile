@@ -10,9 +10,8 @@ function detailedTrekController($scope, $stateParams, trek, FavoritesService) {
 	};
 
 	$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
-
 }
 
 module.exports = {
 	detailedTrekController: detailedTrekController
-}
+};

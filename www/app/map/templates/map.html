@@ -1,3 +1,4 @@
 <ion-view>
-	<geotrek-map view="global"></geotrek-map>
+	<geotrek-map view="{{ view }}" trekid="{{ trekid }}"></geotrek-map>
+	<ui-view name="map_view"></ui-view>
 </ion-view>

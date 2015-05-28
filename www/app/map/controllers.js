@@ -1,47 +1,54 @@
 'use strict';
 
-function mapController() {
+function mapController($state, $rootScope, $scope, $stateParams) {
+
+
 }
 
-function leafletMapController($rootScope, $scope, $state, LeafletService, FiltersFactory) {
-
-	var map = LeafletService.getMap();
-	var treksOnMap = new L.featureGroup();
-
-	function makeTreksLayer() {
-		var marker;
-
-		FiltersFactory.getFilteredTreks().then(function (treks) {
-			angular.forEach(treks, function (trek) {
-				marker = LeafletService.getMarkerFromTrek(trek);
-				marker.on('click', function () {
-					$state.go('root.detailed_trek', { trekId: trek.id });
-				});
-				treksOnMap.addLayer(marker);
-			});
-			map.addLayer(treksOnMap);
-		});
-	}
+function globalMapController($rootScope, $scope, LeafletService) {
 
 	function refreshMap() {
-		treksOnMap.clearLayers();
-
-		if ($scope.view === 'global') {
-			LeafletService.setGlobalSettings(map);
-			makeTreksLayer();
-		}
+		LeafletService.setGlobalSettings();
+		LeafletService.makeTreksLayer();
 	}
-
 	refreshMap();
 
 	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		if (toState.name === 'root.map') {
+		if (toState.name === 'root.map.global') {
 			refreshMap();
 		}
 	});
 }
 
+function detailedMapController($rootScope, $scope, $stateParams, TreksService, LeafletService, FavoritesService) {
+
+	$scope.addToFavorites = function () {
+		FavoritesService.changeFavorites($stateParams.trekId);
+		$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
+	};
+	$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
+
+	function refreshMap() {
+		TreksService.getTrek($stateParams.trekId).then(function (trek) {
+			LeafletService.setDetailedSettings(trek);				
+		});
+	}
+	refreshMap();
+
+	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+		if (toState.name === 'root.map.detailed') {
+			refreshMap();
+		}
+	});
+}
+
+function mapDirectiveController() {
+
+}
+
 module.exports = {
 	mapController: mapController,
-	leafletMapController: leafletMapController
+	globalMapController: globalMapController,
+	detailedMapController: detailedMapController,
+	mapDirectiveController: mapDirectiveController
 };

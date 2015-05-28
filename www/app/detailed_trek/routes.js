@@ -23,4 +23,4 @@ function detailedTrekRoutes($stateProvider) {
 
 module.exports = {
 	detailedTrekRoutes: detailedTrekRoutes
-}
+};

@@ -1,3 +1,4 @@
+resources/
 platforms/
 plugins/
 node_modules/
@@ -8,3 +9,4 @@ maps/
 www/app.js
 www/app-vendors.js
 www/app.css
+www/lib/platform

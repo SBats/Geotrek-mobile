@@ -6,12 +6,8 @@ function leafletMapDirective() {
 	return {
 		restrict: 'E',
 		replace: false,
-		scope: {
-			view: '@',
-			trekId: '@'
-		},
-		controller: controllers.leafletMapController,
-		template: require('./templates/leaflet_map.html')
+		controller: controllers.mapDirectiveController,
+		template: require('./templates/map_directive.html')
 	};
 }
 

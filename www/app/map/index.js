@@ -3,7 +3,9 @@
 window.angular.module('app.map', [])
 
 .controller('MapController', require('./controllers').mapController)
-.controller('LeafletMapController', require('./controllers').leafletMapController)
+.controller('GlobalMapController', require('./controllers').globalMapController)
+.controller('DetailedMapController', require('./controllers').detailedMapController)
+.controller('MapDirectiveController', require('./controllers').mapDirectiveController)
 
 .service('LeafletService', require('./services').leafletService)
 .service('IconsService', require('./services').iconsService)
