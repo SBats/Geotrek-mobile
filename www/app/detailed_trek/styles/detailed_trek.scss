@@ -5,3 +5,35 @@
 .button#favorite_btn {
 	transition: all .5s ease-in;
 }
+
+.detailed_trek_header {
+	width:95%;
+	margin: 0 auto;
+	padding-top: 15px;
+	height: 200px;
+}
+
+.detailed_trek_header .picto {
+	margin-left: 5px;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+}
+
+.detailed_trek_hscroll {
+	width:100%;
+}
+
+.detailed_trek_hscroll#pictures {
+	height:500px;
+}
+
+.detailed_trek_hscroll#pictures ion-slide {
+	text-align: center;
+}
+
+.detailed_trek_hscroll#pictures ion-slide img {
+	padding: 30px;
+	padding-bottom: 40px;
+	height: 500px;
+}

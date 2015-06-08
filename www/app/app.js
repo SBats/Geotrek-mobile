@@ -12,6 +12,7 @@ var dependencies = [
 'app.init',
 'app.filters',
 'app.treks',
+'app.pois',
 'app.map',
 'app.favorites',
 'app.list_display',
@@ -30,6 +31,7 @@ require('./commons');
 require('./init');
 require('./filters');
 require('./treks');
+require('./pois');
 require('./map');
 require('./favorites');
 require('./list_display');

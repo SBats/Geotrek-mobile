@@ -1,12 +1,20 @@
 'use strict';
 
-function detailedTrekController($scope, $stateParams, trek, FavoritesService) {
+function detailedTrekController($ionicHistory, $state, $scope, $stateParams, $sce, trek, FavoritesService) {
+
+	console.log(trek);
 
 	$scope.trek = trek;
+	$scope.mainDescription = $sce.trustAsHtml(trek.properties.description);
+
+	$scope.switchToMap = function () {
+		$ionicHistory.nextViewOptions({	disableBack: true });
+		$state.go('root.map.detailed', { trekId: trek.id });
+	};
 
 	$scope.addToFavorites = function () {
-		FavoritesService.changeFavorites($stateParams.trekId);
-		$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
+		FavoritesService.changeFavorites(trek.id);
+		$scope.isFavorite = FavoritesService.isFavorite(trek.id);
 	};
 
 	$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);

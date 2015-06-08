@@ -5,7 +5,7 @@ var controllers = require('./controllers');
 function leafletMapDirective() {
 	return {
 		restrict: 'E',
-		replace: false,
+		replace: true,
 		controller: controllers.mapDirectiveController,
 		template: require('./templates/map_directive.html')
 	};

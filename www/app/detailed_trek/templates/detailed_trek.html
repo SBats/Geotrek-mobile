@@ -1,13 +1,31 @@
-<ion-view view-title="Trek">
-    <ion-nav-buttons side="right">
-        <button class="button {{ isFavorite ? 'is_favorite' : '' }}" id="favorite_btn" ng-click="addToFavorites()">
-        	Favoriser
-        </button>
-        <button class="button">
-        	Télécharger
-        </button>
+<ion-view>
+    <ion-nav-buttons side="right" class="detailed_view_buttons">
+        <button class="button detailed_view_buttons ion-map {{ hideButtons }}"
+        ng-click="switchToMap()"></button>
+        <button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
+        id="favorite_btn" ng-click="addToFavorites()"></button>
+        <button class="button detailed_view_buttons {{ hideButtons }} ion-archive"></button>
     </ion-nav-buttons>
     <ion-content overflow-scroll="false">
-        Détail du trek : "{{ trek.properties.name }}"
+        <div class="detailed_trek_header">
+            <h1>{{ trek.properties.name }}</h1>
+            <div class="float_left">
+                <img src="{{ trek.properties.thumbnail }}" \>
+            </div>
+            <div>
+                <img class="picto" src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
+                <img class="picto" src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
+                <i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
+                <br \>
+                <img class="picto" src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
+                <i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
+            </div>
+        </div>
+        <p ng-bind-html="mainDescription"></p>
+        <ion-slide-box class="float_left detailed_trek_hscroll" id="pictures" >
+            <ion-slide ng-repeat="picture in trek.properties.pictures">
+                <img src="{{ picture.url }}" \>
+            </ion-slide>
+        </ion-slide-box>
     </ion-content>
 </ion-view>

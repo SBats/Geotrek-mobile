@@ -6,7 +6,7 @@ function mapRoutes($stateProvider) {
 	
 	$stateProvider
 	.state('root.map', {
-		url:'/map',
+		asbtract: true,
 		views: {
 			'content': {
 				template: require('./templates/map.html'),
@@ -16,7 +16,7 @@ function mapRoutes($stateProvider) {
 	})
 
 	.state('root.map.global', {
-		url: "/global",
+		url: "/map",
 		views: {
 			'map_view': {
 				template: require('./templates/global_map.html'),
@@ -26,7 +26,12 @@ function mapRoutes($stateProvider) {
 	})
 
 	.state('root.map.detailed', {
-		url: "/trek-:trekId",
+		url: "/map/:trekId",
+		resolve : {
+			trek: function(TreksService, $stateParams) {
+				return (TreksService.getTrek($stateParams.trekId));
+			}
+		},
 		views: {
 			'map_view': {
 				template: require('./templates/detailed_map.html'),

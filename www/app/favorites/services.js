@@ -14,9 +14,9 @@ function favoritesService($q, TreksService) {
 		var deferred = $q.defer();
 
 		self.favorites = [];
-		TreksService.getTreks().then(function (treks) {+
+		TreksService.getTreks().then(function (treks) {
 			angular.forEach(treks.features, function (trek) {
-				if (self.favoritesId.indexOf(String(trek.id)) > -1) {
+				if (self.favoritesId.indexOf(trek.id) > -1) {
 					self.favorites.push(trek);
 				}
 			});

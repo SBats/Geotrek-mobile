@@ -1,49 +1,54 @@
 'use strict';
 
-function mapController($state, $rootScope, $scope, $stateParams) {
+function mapController($state, $rootScope, $scope, $stateParams, LeafletService) {
 
-
+	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+		if (fromState.name === 'root.map.detailed' || fromState.name === 'root.map.global') {
+			LeafletService.clearMapLayers();
+		}
+	});
 }
 
 function globalMapController($rootScope, $scope, LeafletService) {
 
-	function refreshMap() {
-		LeafletService.setGlobalSettings();
-		LeafletService.makeTreksLayer();
-	}
-	refreshMap();
+	LeafletService.setGlobalSettings();
 
-	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		if (toState.name === 'root.map.global') {
-			refreshMap();
-		}
-	});
+	$scope.$parent.hideButtons = 'hide';
+	$scope.$parent.title = 'Global map';
 }
 
-function detailedMapController($rootScope, $scope, $stateParams, TreksService, LeafletService, FavoritesService) {
+function detailedMapController($ionicHistory, $rootScope, $scope, $state, trek, TreksService, LeafletService, FavoritesService) {
 
-	$scope.addToFavorites = function () {
-		FavoritesService.changeFavorites($stateParams.trekId);
-		$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
+	$scope.$parent.switchToText = function () {
+		$ionicHistory.nextViewOptions({	disableBack: true });
+		$state.go('root.detailed_trek', { trekId: trek.id });
 	};
-	$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
 
-	function refreshMap() {
-		TreksService.getTrek($stateParams.trekId).then(function (trek) {
-			LeafletService.setDetailedSettings(trek);				
-		});
-	}
-	refreshMap();
+	$scope.$parent.addToFavorites = function () {
+		FavoritesService.changeFavorites(trek.id);
+		$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
+	};
+	$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
+	$scope.$parent.hideButtons = '';
+	$scope.$parent.trek = trek;
+	$scope.$parent.title = 'Detailed map';
 
-	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		if (toState.name === 'root.map.detailed') {
-			refreshMap();
-		}
-	});
+	LeafletService.setDetailedSettings(trek);
 }
 
 function mapDirectiveController() {
-
+	var map = document.getElementById('map');
+	var body = document.body,
+		html = document.documentElement;
+	var height = Math.max(body.scrollHeight, body.offsetHeight,
+					   html.clientHeight, html.scrollHeight, html.offsetHeight);
+	
+	map.style.height = (height - 44) + 'px';
+	window.addEventListener('resize', function (event) {
+		height = Math.max(body.scrollHeight, body.offsetHeight,
+			html.clientHeight, html.scrollHeight, html.offsetHeight);
+		map.style.height = (height - 44) + 'px';
+	});
 }
 
 module.exports = {

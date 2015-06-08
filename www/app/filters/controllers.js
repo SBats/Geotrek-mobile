@@ -7,13 +7,10 @@ function filtersController($rootScope, $scope, filters, filteredTreks, FiltersFa
 
 	$scope.setOption = function (filter, option) {
 		filters[filter][option].isActive = !filters[filter][option].isActive;
-		$rootScope.$emit('filtersChange');
+		FiltersFactory.getFilteredTreks().then(function (treks) {
+			$scope.nbResults = treks.length;
+		});
 	};
-
-	$rootScope.$on('nbResults', function (e, data) {
-		$scope.nbResults = data.nbResults;
-	});
-
 }
 
 module.exports = {
