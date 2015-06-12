@@ -1,11 +1,14 @@
 'use strict';
 
-function detailedTrekController($ionicHistory, $state, $scope, $stateParams, $sce, trek, FavoritesService) {
+function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, FavoritesService) {
 
 	console.log(trek);
 
+	var tabs = $ionicSlideBoxDelegate.$getByHandle('detailed_trek_tabs');
+
 	$scope.trek = trek;
-	$scope.mainDescription = $sce.trustAsHtml(trek.properties.description);
+	$scope.pois = pois;
+	$scope.selected = 'infos';
 
 	$scope.switchToMap = function () {
 		$ionicHistory.nextViewOptions({	disableBack: true });
@@ -17,7 +20,12 @@ function detailedTrekController($ionicHistory, $state, $scope, $stateParams, $sc
 		$scope.isFavorite = FavoritesService.isFavorite(trek.id);
 	};
 
-	$scope.isFavorite = FavoritesService.isFavorite($stateParams.trekId);
+	$scope.changeTab = function (slideNb, id) {
+		tabs.slide(slideNb);
+		$scope.selected = id;
+	};
+
+	$scope.isFavorite = FavoritesService.isFavorite(trek.id);
 }
 
 module.exports = {

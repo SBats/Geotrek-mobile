@@ -10,6 +10,9 @@ function detailedTrekRoutes($stateProvider) {
 		resolve: {
 			trek: function(TreksService, $stateParams) {
 				return (TreksService.getTrek($stateParams.trekId));
+			},
+			pois: function(PoisService, trek) {
+				return (PoisService.getTrekPois(trek.id));
 			}
 		},
 		views: {

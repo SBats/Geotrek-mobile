@@ -79,7 +79,7 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 			angular.forEach(pois, function (poi) {
 				marker = utils.getMarkerFromPoi(poi);
 				marker.on('click', function () {
-					$state.go('root.poi', { poiId: poi.id, trekId : trek.id });
+					$state.go('root.poi', { poiId: poi.id, trekId : trek.id, view: 'map' });
 				});
 				self.trekLayers[trek.id].addLayer(marker);
 			});

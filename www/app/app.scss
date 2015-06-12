@@ -21,8 +21,16 @@ $ionicons-font-path: "./lib/ionic/fonts" !default;
 
 //Generic rules
 .float_left { float: left; }
-.clear { float:none; }
+.clear { float: none; }
 
+.center_div_wrapper {
+	text-align: center;
+	width: 100%; }
+.center_div_wrapper .center_div {
+	width: 95%;
+	display: inline-block;
+	text-align: left;
+}
 
 // Include all of Ionic
 @import "../lib/ionic/scss/ionic";
@@ -34,4 +42,5 @@ $ionicons-font-path: "./lib/ionic/fonts" !default;
 @import "./filters/styles/filters.scss";
 @import "./map/styles/map.scss";
 @import "./detailed_trek/styles/detailed_trek.scss";
+@import "./pois/styles/pois.scss";
 

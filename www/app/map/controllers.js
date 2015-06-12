@@ -14,7 +14,7 @@ function globalMapController($rootScope, $scope, LeafletService) {
 	LeafletService.setGlobalSettings();
 
 	$scope.$parent.hideButtons = 'hide';
-	$scope.$parent.title = 'Global map';
+	$scope.$parent.title = 'Carte';
 }
 
 function detailedMapController($ionicHistory, $rootScope, $scope, $state, trek, TreksService, LeafletService, FavoritesService) {
@@ -31,7 +31,7 @@ function detailedMapController($ionicHistory, $rootScope, $scope, $state, trek, 
 	$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
 	$scope.$parent.hideButtons = '';
 	$scope.$parent.trek = trek;
-	$scope.$parent.title = 'Detailed map';
+	$scope.$parent.title = trek.properties.name;
 
 	LeafletService.setDetailedSettings(trek);
 }

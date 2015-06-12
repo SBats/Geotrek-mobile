@@ -1,31 +1,123 @@
 <ion-view>
-    <ion-nav-buttons side="right" class="detailed_view_buttons">
-        <button class="button detailed_view_buttons ion-map {{ hideButtons }}"
-        ng-click="switchToMap()"></button>
-        <button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
-        id="favorite_btn" ng-click="addToFavorites()"></button>
-        <button class="button detailed_view_buttons {{ hideButtons }} ion-archive"></button>
-    </ion-nav-buttons>
-    <ion-content overflow-scroll="false">
-        <div class="detailed_trek_header">
-            <h1>{{ trek.properties.name }}</h1>
-            <div class="float_left">
-                <img src="{{ trek.properties.thumbnail }}" \>
-            </div>
-            <div>
-                <img class="picto" src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
-                <img class="picto" src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
-                <i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
-                <br \>
-                <img class="picto" src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
-                <i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
-            </div>
-        </div>
-        <p ng-bind-html="mainDescription"></p>
-        <ion-slide-box class="float_left detailed_trek_hscroll" id="pictures" >
-            <ion-slide ng-repeat="picture in trek.properties.pictures">
-                <img src="{{ picture.url }}" \>
-            </ion-slide>
-        </ion-slide-box>
-    </ion-content>
+	<ion-nav-title>
+		Détail du trek
+	</ion-nav-title>
+
+	<ion-nav-buttons side="right" class="detailed_view_buttons">
+		<button class="button detailed_view_buttons ion-map {{ hideButtons }}"
+		ng-click="switchToMap()"></button>
+		<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
+		id="favorite_btn" ng-click="addToFavorites()"></button>
+		<button class="button detailed_view_buttons {{ hideButtons }} ion-archive"></button>
+	</ion-nav-buttons>
+
+	<ion-content overflow-scroll="false">
+		<div class="center_div_wrapper">
+			<div class="center_div">
+
+				<div class="detailed_trek_header">
+					<h1>{{ trek.properties.name }}</h1>
+					<div class="float_left">
+						<img src="{{ trek.properties.thumbnail }}" \>
+					</div>
+					<div class="float_left">
+						<img class="picto" src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
+						<img class="picto" src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
+						<i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
+						<br \>
+						<img class="picto" src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
+						<i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
+					</div>
+				</div>
+
+				<div class="center_div_wrapper">
+					<div class="detailed_trek_tab_buttons">
+						<div id="infos" ng-click="changeTab(0, 'infos')" class="float_left {{ selected }} ">Le trek</div>
+						<div id="access" ng-click="changeTab(1, 'access')" class="float_left {{ selected }}">Infos pratiques</div>
+						<div id="others" ng-click="changeTab(2, 'others')" class="float_left {{ selected }}">Treks liés</div>
+					</div>
+				</div>
+
+				<ion-slide-box disable-scroll="true" show-pager="false" delegate-handle="detailed_trek_tabs">
+
+					<ion-slide>
+						<ion-slide-box class="float_left detailed_trek_hscroll" id="pictures" >
+							<ion-slide ng-repeat="picture in trek.properties.pictures">
+								<img ng-src="{{ picture.url }}" \>
+							</ion-slide>
+						</ion-slide-box>
+
+						<p ng-bind-html="trek.properties.description_teaser"></p>
+						<p ng-bind-html="trek.properties.ambiance"></p>
+						<p ng-bind-html="trek.properties.description"></p>
+
+						<h1>Points d'intêret :</h1>
+						<div class="float_left poi_gallery" ng-repeat="poi in pois"
+						ui-sref="root.poi({ poiId: poi.id, trekId: trek.id, view: 'text' })">
+							<img class="gallery_content" ng-src="{{ poi.properties.pictures[0].url }}" \>
+							<div class="title">
+								<img ng-src="{{ poi.properties.type.pictogram }}" \>
+								{{ poi.properties.name | limitTo: 15 }}...
+							</div>
+						</div>
+
+<!-- 						<ion-slide-box class="float_left detailed_trek_hscroll" id="pois" show-pager="false">
+							<ion-slide ng-repeat="poi in pois" ui-sref="root.poi({ poiId: poi.id, trekId: trek.id, view: 'text' })">
+								<img src="{{ poi.properties.pictures[0].url }}" \>
+								<h2>{{ poi.properties.name }}</h2>
+							</ion-slide>
+						</ion-slide-box> -->
+					</ion-slide>
+
+					<ion-slide>
+						<div ng-if="trek.properties.public_transport" class="info_card float_left">
+							<div class="info_card_content">
+								<div class="title">Transports</div>
+	 							<div class="text">
+	 								<p ng-bind-html="trek.properties.public_transport"></p>
+	 							</div>
+							</div>
+						</div>
+						<div ng-if="trek.properties.access" class="info_card float_left">
+							<div class="info_card_content">
+								<div class="title">Accès routiers</div>
+	 							<div class="text">
+	 								<p ng-bind-html="trek.properties.access"></p>
+	 							</div>
+							</div>
+						</div>
+						<div class="info_card_large float_left" ng-repeat="desk in trek.properties.information_desks">
+							<div class="info_card_content">
+								<div class="title">
+									<img class="float_left" ng-src="{{ desk.photo_url }}" \>
+									<div class="float_left adress">
+										<span>{{ desk.name }}</span><br \><br \>
+										{{ desk.street }}<br \>
+										{{ desk.postal_code }} {{ desk.municipality }}<br \>
+										<a ng-if="desk.website" href="{{ desk.website }}">
+											Site web<br \>
+										</a>
+										<a ng-if="desk.email" href="mailto:{{ desk.email }}">
+											{{ desk.email }}<br \>
+										</a>
+										<a ng-if="desk.phone" href="tel:{{ desk.phone }}">
+											{{ desk.phone }}
+										</a><br \>
+									</div>
+								</div>
+								<div class="text">
+									<p ng-bind-html="{{ desk.description }}"></p>
+								</div>
+							</div>
+						</div>
+					</ion-slide>
+
+					<ion-slide>
+						Autres
+					</ion-slide>
+
+				</ion-slide-box>
+			</div>
+		</div>
+	</ion-content>
 </ion-view>

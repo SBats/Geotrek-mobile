@@ -2,7 +2,7 @@
 
 var settingsConstants = {
 
-	API_URL: 'http://prod-rando-fr.makina-corpus.net/data',
+	API_URL: 'http://rando-pnc.makina-corpus.net/data',
 
 	// PATHS AND DIRECTORY //
 	//

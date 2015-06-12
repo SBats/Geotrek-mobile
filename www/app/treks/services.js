@@ -30,6 +30,9 @@ function treksService($resource, $http, $q, constants, settings, utils) {
 				angular.forEach(trek.properties.pictures, function (picture) {
 					picture.url = utils.getAbsoluteUrl(picture.url);
 				});
+				angular.forEach(trek.properties.information_desks, function (information_desk) {
+					information_desk.photo_url = utils.getAbsoluteUrl(information_desk.photo_url);
+				});
 			});
 			deferred.resolve(self.treks);
 		});

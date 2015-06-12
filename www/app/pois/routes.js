@@ -6,7 +6,7 @@ function poiRoutes($stateProvider) {
 
 	$stateProvider
 	.state('root.poi', {
-		url: "/poi-:poiId?trekId",
+		url: "/poi-:poiId?trekId&view",
 		resolve: {
 			poi: function(PoisService, $stateParams) {
 				return (PoisService.getPoi($stateParams.poiId));

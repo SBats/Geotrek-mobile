@@ -13,16 +13,6 @@ function layoutRoutes($locationProvider, $stateProvider, $urlRouterProvider, $io
             url: '',
             template: require('./templates/layout.html'),
             controller: controller.LayoutController
-        })
-        .state('root.home', {
-            url: '/',
-            views: {
-                'content' : {
-                    template: require('./templates/home-content.html'),
-                    controller: controller.ContentController
-                }
-            }
-
         });
 }
 
