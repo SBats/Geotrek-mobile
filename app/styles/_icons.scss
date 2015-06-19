@@ -34,7 +34,15 @@
     &.trek-icon {
         background: transparent top left no-repeat;
         background-size: 100% auto;
-        background-image: url(../images/marker-pedestre.svg);
+        &.cat-T4 {
+            background-image: url(../images/marker-pedestre.svg);
+        }
+        &.cat-T1 {
+            background-image: url(../images/marker-vtt.svg);
+        }
+        &.cat-T3 {
+            background-image: url(../images/marker-equestre.svg);
+        }
     }
 
     &.poi-icon {
@@ -47,7 +55,6 @@
         border-radius: 50%;
         border-style: solid;
         border-width: 5px;
-        position: relative;
         background: white;
         .count {
             color: black;
