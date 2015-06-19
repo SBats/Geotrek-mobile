@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.makinacorpus.randoloireatlantique" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Rando Loire-Atlantique</name>
+<widget id="net.ffrandonnee.itinerancealpesrando" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Itinerance Alpes rando</name>
     <description>
-        Rando Loire-Atlantique
+        Itinerance Alpes rando
     </description>
     <author email="contact@makina-corpus.com" href="http://makina-corpus.com">
         Makina Corpus Cordova Team
