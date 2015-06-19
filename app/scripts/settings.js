@@ -132,7 +132,7 @@ geotrekAppSettings.constant('globalSettings', {
             MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: DOMAIN_NAME + '/zip/tiles/global.zip',
             //MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: "http://192.168.100.18:8888/files/tiles/global.zip",
             //FULL_DATA_REMOTE_FILE_URL: "http://192.168.100.18:8888/fr/files/api/trek/trek.zip",
-            LEAFLET_BACKGROUND_URL: 'http://rando.loire-atlantique.fr/tiles?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={    z}&TILEROW={y}&TILECOL={x}'//'http://gpp3-wxs.ign.fr/mt31gongul3grvjwuhfur21a/geoportail/wmts?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={    z}&TILEROW={y}&TILECOL={x}'
+            LEAFLET_BACKGROUND_URL: 'http://itinerance.alpesrando.net/tiles?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={    z}&TILEROW={y}&TILECOL={x}'//'http://gpp3-wxs.ign.fr/mt31gongul3grvjwuhfur21a/geoportail/wmts?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={    z}&TILEROW={y}&TILECOL={x}'
         },
         device: {
             CDV_ROOT: CDV_ROOT,
@@ -183,16 +183,11 @@ geotrekAppSettings.constant('globalSettings', {
                 { id: 1000, name: '>1000m', interval: [1001, 99999] },
             ],
             eLength :  [
-                { id: 0, name: '<5km', interval: [0, 5000] },
-                { id: 5000, name: '5km-10km', interval: [5001, 10000] },
-                { id: 10000, name: '10km-15km', interval: [10001, 15000] },
-                { id: 15000, name: '15km-20km', interval: [15001, 20000] },
-                { id: 20000, name: '20km-25km', interval: [20001, 25000] },
-                { id: 25000, name: '25km-30km', interval: [25001, 30000] },
-                { id: 30000, name: '30km-35km', interval: [30001, 35000] },
-                { id: 35000, name: '35km-40km', interval: [35001, 40000] },
-                { id: 40000, name: '40km-45km', interval: [40001, 45000] },
-                { id: 45000, name: '>45km', interval: [45001, 99999] },
+                { id: 0, name: '<10km', interval: [0, 10000] },
+                { id: 5000, name: '10km-20km', interval: [10001, 20000] },
+                { id: 10000, name: '20km-30km', interval: [20001, 30000] },
+                { id: 15000, name: '30km-40km', interval: [30001, 40000] },
+                { id: 40000, name: '>40km', interval: [40001, 99999] },
             ]
         }
     };
