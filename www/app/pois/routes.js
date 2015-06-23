@@ -9,7 +9,10 @@ function poiRoutes($stateProvider) {
 		url: "/poi-:poiId?trekId&view",
 		resolve: {
 			poi: function(PoisService, $stateParams) {
-				return (PoisService.getPoi($stateParams.poiId));
+				return (PoisService.getPoi($stateParams.poiId, $stateParams.trekId));
+			},
+			trek: function(TreksService, $stateParams) {
+				return (TreksService.getTrek($stateParams.trekId));
 			}
 		},
 		views: {

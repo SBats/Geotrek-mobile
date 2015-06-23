@@ -36,7 +36,11 @@
     "org.apache.cordova.console",
     "com.ionic.keyboard",
     "cordova-plugin-file",
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file-transfer",
+    "org.apache.cordova.file",
+    "org.apache.cordova.file-transfer",
+    "cordova-plugin-zip",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     "android"

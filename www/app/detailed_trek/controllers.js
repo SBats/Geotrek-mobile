@@ -1,14 +1,10 @@
 'use strict';
 
-function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, FavoritesService) {
+function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, utils, constants, settings, TreksService, FavoritesService) {
 
 	console.log(trek);
 
 	var tabs = $ionicSlideBoxDelegate.$getByHandle('detailed_trek_tabs');
-
-	$scope.trek = trek;
-	$scope.pois = pois;
-	$scope.selected = 'infos';
 
 	$scope.switchToMap = function () {
 		$ionicHistory.nextViewOptions({	disableBack: true });
@@ -25,7 +21,22 @@ function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDel
 		$scope.selected = id;
 	};
 
+	$scope.downloadTrek = function () {
+		TreksService.deleteOrDownload(trek.id).then(function (res) {
+			console.log(res);
+			$scope.isDownloaded = (res === constants.TREK_DOWNLOADED);
+			if (!FavoritesService.isFavorite(trek.id)) {
+				FavoritesService.changeFavorites(trek.id);
+				$scope.isFavorite = FavoritesService.isFavorite(trek.id);
+			}
+		});
+	};
+
+	TreksService.isTrekDownloaded(trek.id).then(function (res) { $scope.$parent.isDownloaded = res; });
+	$scope.trek = trek;
 	$scope.isFavorite = FavoritesService.isFavorite(trek.id);
+	$scope.pois = pois;
+	$scope.selected = 'infos';
 }
 
 module.exports = {

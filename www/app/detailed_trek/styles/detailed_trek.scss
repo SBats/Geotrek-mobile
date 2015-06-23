@@ -1,6 +1,8 @@
 .button.is_favorite {
 	background-color: yellow; }
-.button#favorite_btn {
+.button.is_downloaded {
+	background-color: #0099ff; }
+.button#favorite_btn .button#download_btn {
 	transition: all .5s ease-in;
 }
 

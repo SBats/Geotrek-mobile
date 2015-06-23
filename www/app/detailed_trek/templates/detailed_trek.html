@@ -8,7 +8,8 @@
 		ng-click="switchToMap()"></button>
 		<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
 		id="favorite_btn" ng-click="addToFavorites()"></button>
-		<button class="button detailed_view_buttons {{ hideButtons }} ion-archive"></button>
+		<button class="button detailed_view_buttons ion-archive {{ isDownloaded ? 'is_downloaded' : '' }} {{ hideButtons }}"
+		id="download_btn" ng-click="downloadTrek()"></button>
 	</ion-nav-buttons>
 
 	<ion-content overflow-scroll="false">
@@ -18,14 +19,14 @@
 				<div class="detailed_trek_header">
 					<h1>{{ trek.properties.name }}</h1>
 					<div class="float_left">
-						<img src="{{ trek.properties.thumbnail }}" \>
+						<img ng-src="{{ trek.properties.thumbnail }}" \>
 					</div>
 					<div class="float_left">
-						<img class="picto" src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
-						<img class="picto" src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
+						<img class="picto" ng-src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
+						<img class="picto" ng-src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
 						<i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
 						<br \>
-						<img class="picto" src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
+						<img class="picto" ng-src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
 						<i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
 					</div>
 				</div>
@@ -60,32 +61,28 @@
 								{{ poi.properties.name | limitTo: 15 }}...
 							</div>
 						</div>
-
-<!-- 						<ion-slide-box class="float_left detailed_trek_hscroll" id="pois" show-pager="false">
-							<ion-slide ng-repeat="poi in pois" ui-sref="root.poi({ poiId: poi.id, trekId: trek.id, view: 'text' })">
-								<img src="{{ poi.properties.pictures[0].url }}" \>
-								<h2>{{ poi.properties.name }}</h2>
-							</ion-slide>
-						</ion-slide-box> -->
 					</ion-slide>
 
 					<ion-slide>
+
 						<div ng-if="trek.properties.public_transport" class="info_card float_left">
 							<div class="info_card_content">
 								<div class="title">Transports</div>
-	 							<div class="text">
-	 								<p ng-bind-html="trek.properties.public_transport"></p>
-	 							</div>
+								<div class="text">
+									<p ng-bind-html="trek.properties.public_transport"></p>
+								</div>
 							</div>
 						</div>
+
 						<div ng-if="trek.properties.access" class="info_card float_left">
 							<div class="info_card_content">
 								<div class="title">Accès routiers</div>
-	 							<div class="text">
-	 								<p ng-bind-html="trek.properties.access"></p>
-	 							</div>
+								<div class="text">
+									<p ng-bind-html="trek.properties.access"></p>
+								</div>
 							</div>
 						</div>
+
 						<div class="info_card_large float_left" ng-repeat="desk in trek.properties.information_desks">
 							<div class="info_card_content">
 								<div class="title">
@@ -106,10 +103,11 @@
 									</div>
 								</div>
 								<div class="text">
-									<p ng-bind-html="{{ desk.description }}"></p>
+									<p ng-bind-html="desk.description"></p>
 								</div>
 							</div>
 						</div>
+						
 					</ion-slide>
 
 					<ion-slide>

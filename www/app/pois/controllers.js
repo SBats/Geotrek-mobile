@@ -1,6 +1,6 @@
 'use strict';
 
-function poiController($scope, $ionicHistory, $state, $stateParams, poi) {
+function poiController($scope, $ionicHistory, $state, $stateParams, poi, trek, LeafletService) {
 
 	console.log(poi);
 
@@ -15,6 +15,8 @@ function poiController($scope, $ionicHistory, $state, $stateParams, poi) {
 	};
 	$scope.poi = poi;
 	$scope.title = poi.properties.name;
+
+	//LeafletService.setPoiSettings(poi, trek);
 }
 
 module.exports = {

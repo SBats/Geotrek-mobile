@@ -4,9 +4,17 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 
 	var self = this;
 
-	this.getAbsoluteUrl = function (relativeUrl) {
-		return (settings.apiUrl + relativeUrl);
-	}
+	this.getAbsoluteUrl = function (relativeUrl, trekId) {
+		if (settings.isConnected) {
+			return (settings.apiUrl + relativeUrl);
+		}
+		else if (angular.isDefined(trekId)) {
+			return (settings.treksDir + '/' + trekId + relativeUrl);
+		}
+		else {
+			return (settings.treksDir + '/' + constants.GLOBAL_DIR + relativeUrl);
+		}
+	};
 
 	this.getStartPoint = function (element) {
 		var firstPointCoordinates = [];
@@ -65,114 +73,115 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 		return (marker);
 	};
 
-	this.createClusterMarkerFromTrek = function(trek) {
-		var startPoint = self.getStartPoint(trek);
-
-		var marker = L.marker([startPoint.lat, startPoint.lng], {
-			icon: 'img/marker-source.png'
-		});
-
-		return (marker);
-	};
-
 	this.downloadFile = function(url, filepath, fileName, forceDownload) {
+
+		var deferred = $q.defer();
+		var fileTransfer;
+		var relativePath = filepath.replace(settings.cdvRoot + '/', '');
 
 		if (angular.isUndefined(forceDownload)) {
 			forceDownload = settings.forceDownload;
 		}
 
+		function onDownloadNeeded() {
+
+			$cordovaFileTransfer.download(url, filepath + '/' + fileName)
+			.then(function (success) {
+				window.localStorage['globalZipLastUpdate'] = Date();
+				deferred.resolve(constants.FILE_DOWNLOADED);
+			},
+			function (error) { deferred.reject(error); });
+		}
+
 		if (forceDownload === false) {
 
-			var relativePath = filepath.replace(constants.CDV_ROOT + '/', '');
+			$cordovaFile.checkFile(settings.cdvRoot + '/' + relativePath + '/',fileName)
+			.then(function (success) {
 
-			$cordovaFile.checkFile(relativePath, fileName).then(function (succes) {
-				console.log('File already there');
-			}, function (error) {
-				console.log('Need to download : ' + url);
-				var fileTransfer = new FileTransfer();
-				fileTransfer.download(
-					url, relativePath,
-					function (succes) {
-						console.log('File downloaded');
-					},
-					function (error) {
-						console.log(error);
+				// If the file is already on the device, we check if we need to update it
+				var lastModifiedDate = new Date(window.localStorage['globalZipLastUpdate']);
+				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
+
+				$http.get(url, config)
+				.then(function (success) {
+					// In case of answer 200, we remove the existing files, then download the file to update it
+					$cordovaFile.removeRecursively(filepath + '/', "")
+					.then(onDownloadNeeded, function (error) {
+						deferred.reject(error);
 					});
-			});
+				},
+				function (response) {
+					// In case of answer 304, the file is up to date, no need to download
+					deferred.resolve(constants.FILE_ALREADY_THERE);
+				});
 
-		// return ($cordovaFile.readFileMetadata(relativePath)
-		// .then(function(file) {
+			},
+			// If the file is not on the device, we download it
+			onDownloadNeeded);
+		} else {
 
-		//     // If there is a file, we check on server if file was modified
-		//     // by using HTTP header 'If-Modified-Since'
-		//     var lastModifiedDate = new Date(file.lastModifiedDate),
-		//         config = {
-		//             headers: {
-		//                 'If-Modified-Since': lastModifiedDate.toUTCString()
-		//             }
-		//         };
-
-		//     // NOTICE
-		//     // We have used $http service because we needed 'If-Modified-Since' HTTP header,
-		//     // and cordova plugin file transfer (used by $cordovaFile.downloadFile) doesn't manage it properly.
-		//     // In case on 304, response body is empty, and cordova plugin overwrites previous data with empty file...
-		//     // https://issues.apache.org/jira/browse/CB-7006
-
-		//     return $http.get(url, config)
-		//     .then(function(response) {
-		//         // Response is 2xx
-
-		//         // It means that server file is more recent than device one
-		//         // We download it so !
-		//         // We could have used $cordovaFile 'writeFile' function, as response contains our data,
-		//         // but we prefer 'downloadFile' call to be consistent with other cases.
-		//         $translate([
-		//             'maj_title',
-		//             'maj_message'
-		//         ]).then(function(translations) {
-		//             var alertPopup = $ionicPopup.alert({
-		//                 title: translations.maj_title,
-		//                 template: translations.maj_message
-		//             });
-		//             alertPopup.then(function(res) {
-		//                 console.log('User knows !');
-		//             });
-		//         });
-		//         return $cordovaFile.downloadFile(url, filepath);
-
-		//     }, function(response) {
-		//         var status = response.status,
-		//             deferred = $q.defer();
-
-		//         if (status === 304) {
-		//             // If status is 304, it means that server file is older than device one
-		//             // Do nothing.
-		//             var msg = 'File not changed (304) : ' + url + ' at ' + filepath;
-		//             deferred.resolve({message: msg, type: 'connection', data: {status: status}});
-		//         }
-		//         else {
-		//             // If status is different than 304, there is a connection problem
-
-		//             // We can't connect to URL
-		//             if (status === 0) {
-		//                 deferred.reject({message: 'Network unreachable', type: 'connection', data: {status: status}});
-		//             }
-		//             else {
-		//                 deferred.reject({message: 'Response error ', type: 'connection', data: {status: status}});
-		//             }
-		//         }
-		//         return deferred.promise;
-		//     });
-
-		// }, function() {
-		//     // If there is no file with that path, we download it !
-		//     return ($cordovaFile.downloadFile(url, filepath));
-		// }));
-	 	} else {
-			return ($cordovaFile.downloadFile(url, filepath));
-	 	}
+			onDownloadNeeded();
+		}
+		return (deferred.promise);
 	};
 
+	this.unzip = function (zipLocalPath, toPath) {
+
+		var deferred = $q.defer();
+
+		// Calling unzip method from Zip Plugin (https://github.com/MobileChromeApps/zip)
+		zip.unzip(zipLocalPath, toPath, function(result) {
+
+			if (result == 0) {
+				deferred.resolve("unzip complete");
+			}
+			else {
+				deferred.reject("unzip failed");
+			}
+		}, function(eventProgress) {
+			// eventProgress is a dict with 2 keys : loaded and total
+			deferred.notify(eventProgress);
+		});
+
+		return (deferred.promise);
+	};
+
+	this.downloadAndUnzip = function (url, filepath, fileName, forceDownload) {
+		var deferred = $q.defer();
+
+		function onUnzipNeeded() {
+
+			console.log('Unziping ' + filepath + '/' + fileName + ' to ' + filepath);
+			self.unzip(filepath + '/' + fileName, filepath)
+			.then(function (unzipRes) {	deferred.resolve('ok');	},
+				function (error) { deferred.reject(error); });
+		}
+
+		function onDownloadSuccess(downloadRes) {
+
+			if (downloadRes === constants.FILE_DOWNLOADED) {
+
+				console.log('Download success');
+				onUnzipNeeded();
+			}
+			else {
+				console.log('Download not needed');
+				deferred.resolve('ok');
+			}
+		}
+
+		console.log('Downloading: ' + url + ' to: ' + filepath + ' with filename: ' + fileName);
+		self.downloadFile(url, filepath, fileName, forceDownload)
+		.then(onDownloadSuccess, function (error) {
+			deferred.reject(error);
+		});
+
+		return (deferred.promise);
+	};
+
+	this.readDir = function() {
+
+	};
 }
 
 module.exports = {

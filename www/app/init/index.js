@@ -2,4 +2,8 @@
 
 window.angular.module('app.init', [])
 
-.service('init', require('./init').initService);
+.controller('InitController', require('./controllers').initController)
+
+.service('InitService', require('./services').initService)
+
+.config(require('./routes').initRoutes);

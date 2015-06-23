@@ -1,4 +1,4 @@
-<ion-view hide-back-button="true">
+<ion-view hide-back-button="true" cache-view="false">
     <ion-nav-title>
         {{ title }}
     </ion-nav-title>
@@ -13,7 +13,8 @@
 		<div class="center_div_wrapper">
 			<div class="center_div">
 				<h1>{{ poi.properties.name }}</h1>
-				<img ng-repeat="picture in poi.properties.pictures" src="{{ picture.url }}" \>
+				<!-- <geotrek-map size="small"></geotrek-map> -->
+				<img ng-repeat="picture in poi.properties.pictures" ng-src="{{ picture.url }}" \>
 				<div>
 					<p ng-bind-html="poi.properties.description"></p>
 				</div>

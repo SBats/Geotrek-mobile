@@ -5,7 +5,7 @@ var controller = require('./controllers');
 function layoutRoutes($locationProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     $ionicConfigProvider.views.transition('none');
-    $urlRouterProvider.otherwise('/map');
+    $urlRouterProvider.otherwise('/init');
 
     $stateProvider
         .state('root', {

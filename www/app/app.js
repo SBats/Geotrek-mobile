@@ -38,20 +38,16 @@ require('./list_display');
 require('./detailed_trek');
 
 
-angularApp.run(function ($ionicPlatform, $cordovaNetwork, init, settings) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    // if(window.cordova && window.cordova.plugins.Keyboard) {
-    //   window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    // }
+angularApp.run(function ($ionicPlatform, $cordovaNetwork) {
+	$ionicPlatform.ready(function() {
+		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+		// for form inputs)
+		// if(window.cordova && window.cordova.plugins.Keyboard) {
+		//   window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+		// }
 
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-
-    if (settings.isDevice) {
-      //init.getDeviceFiles();
-    }
-  });
+		if(window.StatusBar) {
+			StatusBar.styleDefault();
+		}
+	});
 });

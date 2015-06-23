@@ -5,8 +5,9 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	var self = this;
 
 	self.trekLayers = {};
+	self.tileLayers = {};
 
-	this.makeMap = function (defaultMapSettings, coord) {
+	this.makeMap = function (defaultMapSettings, coord, bounds) {
 		var center = coord ? coord : [defaultMapSettings.LATITUDE, defaultMapSettings.LONGITUDE];
 
 		self.map = L.map('map', {
@@ -16,7 +17,8 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 			maxZoom: defaultMapSettings.DEFAULT_MAX_ZOOM,
 			scrollWheelZoom: true,
 			zoomControl: false,
-			layers: L.tileLayer(constants.leaflet.LEAFLET_BACKGROUND_URL)
+			maxBounds: bounds,
+			layers: L.tileLayer(settings.leafletBackgroundUrl)
 		});
 	};
 
@@ -48,15 +50,18 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	// Sets the defaut position and zoom level when the view is global
 	this.setGlobalSettings = function () {
 		var mapContainer = document.getElementById('map').innerHTML;
+		var coord = { lat: constants.leaflet.global.LATITUDE, lng: constants.leaflet.global.LONGITUDE };
+		var bounds = [ [coord.lat - 0.6, coord.lng - 0.6] , [coord.lat + 0.6, coord.lng + 0.6] ]; 
 
 		if (mapContainer === '') {
-			self.makeMap(constants.leaflet.global);
+			self.makeMap(constants.leaflet.global, coord, bounds);
 			self.trekLayers = {};
 		}
 		else {
 			self.map.options.minZoom = constants.leaflet.global.DEFAULT_MIN_ZOOM;
 			self.map.options.maxZoom = constants.leaflet.global.DEFAULT_MAX_ZOOM;
 			self.map.setZoom(constants.leaflet.global.DEFAULT_ZOOM);
+			self.map.setMaxBounds(bounds);
 		}
 		self.clearMapLayers();
 		if (!self.trekLayers['global']) {
@@ -65,15 +70,9 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 		self.map.addLayer(self.trekLayers['global']);
 	};
 
-	// Makes the trek's route and infos
-	this.makeTrek = function (trek) {
-		var marker = utils.getMarkerFromTrek(trek);
-		var route = L.geoJson();
-
-		route.addData(trek.geometry);
-		self.trekLayers[trek.id] = new L.featureGroup();
-		self.trekLayers[trek.id].addLayer(route);
-		self.trekLayers[trek.id].addLayer(marker);
+	// Makes the POI markers
+	this.makePois = function (trek) {
+		var marker;
 
 		PoisService.getTrekPois(trek.id).then(function (pois) {
 			angular.forEach(pois, function (poi) {
@@ -86,24 +85,64 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 		});
 	};
 
+	// Makes the trek's route and infos
+	this.makeTrek = function (trek) {
+		var marker = utils.getMarkerFromTrek(trek);
+		var route = L.geoJson();
+
+		route.addData(trek.geometry);
+		self.trekLayers[trek.id] = new L.featureGroup();
+		self.trekLayers[trek.id].addLayer(route);
+		self.trekLayers[trek.id].addLayer(marker);
+	};
+
+	this.addTrekTileLayer = function (trekId) {
+		console.log('Adding new tilelayer');
+		if (angular.isUndefined(self.tileLayers[trekId])) {
+			console.log('tilelayer created');
+			self.tileLayers[trekId] = L.tileLayer(settings.tilesDir + '/' + trekId + '/{z}/{x}/{y}.png');
+		}
+		if (!self.map.hasLayer(self.tileLayers[trekId])) {
+			console.log('tilelayer added on map');
+			self.tileLayers[trekId].addTo(self.map);
+		}
+	};
+
 	// Centers the map on the trek and zooms on it
 	this.setDetailedSettings = function (trek) {
 		var coord = utils.getStartPoint(trek);
 		var mapContainer = document.getElementById('map').innerHTML;
+		var bounds = [ [coord.lat - 0.05, coord.lng - 0.05] , [coord.lat + 0.05, coord.lng + 0.05] ]; 
 
 		if (mapContainer === '') {
-			self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng]);
+			self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng], bounds);
 			self.trekLayers = {};
 		}
 		else {
 			self.map.setZoomAround([coord.lat, coord.lng], constants.leaflet.detailed.DEFAULT_ZOOM);
 			self.map.options.minZoom = constants.leaflet.detailed.DEFAULT_MIN_ZOOM;
 			self.map.options.maxZoom = constants.leaflet.detailed.DEFAULT_MAX_ZOOM;
+			self.map.setMaxBounds(bounds);
+		}
+		if (settings.isDevice && !settings.isConnected) {
+			self.addTrekTileLayer(trek.id);
 		}
 		self.clearMapLayers();
 		if (!self.trekLayers[trek.id]) {
 			self.makeTrek(trek);
+			self.makePois(trek);
 		}
+		self.map.addLayer(self.trekLayers[trek.id]);
+	};
+
+	// Centers on the given POI
+	this.setPoiSettings = function (poi, trek) {
+		var coord = utils.getStartPoint(poi);
+		var mapContainer = document.getElementById('map').innerHTML;
+
+		self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng]);
+		self.trekLayers = {};
+		self.makeTrek(trek);
 		self.map.addLayer(self.trekLayers[trek.id]);
 	};
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-function LayoutController(FiltersFactory) {
+function LayoutController() {
 }
 
 module.exports = {

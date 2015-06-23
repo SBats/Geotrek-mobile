@@ -19,7 +19,6 @@ function mapRoutes($stateProvider) {
 		url: "/map",
 		views: {
 			'map_view': {
-				template: require('./templates/global_map.html'),
 				controller: controllers.globalMapController
 			}
 		}
@@ -34,7 +33,6 @@ function mapRoutes($stateProvider) {
 		},
 		views: {
 			'map_view': {
-				template: require('./templates/detailed_map.html'),
 				controller: controllers.detailedMapController
 			}
 		}
