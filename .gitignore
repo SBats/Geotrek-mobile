@@ -5,3 +5,5 @@ bower_components
 .DS_Store
 app/styles/geotrek-mobile.css
 app/styles/geotrek-mobile.css.map
+app/styles/_customisation-variables.scss
+app/styles/_customisation.scss
