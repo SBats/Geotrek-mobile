@@ -2,20 +2,37 @@
 // Variables
 // --------------------------------------------------
 
-$primaryColor:			$green;
-$secondaryColor:		$greenDarker;
-$complementaryColor:    white;
-$complementaryColor2:   grey;
-$complementaryColor3:   orange;
-$complementaryColor4:   blue;
-$complementaryColor5:   #E0CDA9;
+// Grays
+// -------------------------
+
+$grayDarker:            #222;
+$grayDark:              #333;
+$gray:                  #555;
+$grayLight:             #999;
+$grayLighter:           #eee;
+$white:                 #fff;
+
+
+// App Colors
+//
+
+$green:                  #B4CC1B;
+$greenDarker:            #7da013;
+
+$primaryColor:			$green !default;
+$secondaryColor:		$greenDarker !default;
+$complementaryColor:    $white !default;
+$complementaryColor2:   grey !default;
+$complementaryColor3:   orange !default;
+$complementaryColor4:   blue !default;
+$complementaryColor5:   #E0CDA9 !default;
 
 $tabs-color:			$dark;
 $tabs-border-color:		$complementaryColor;
 $tabs-border-active-color: $primaryColor;
 
 $icon-bt-color:			$dark;
-$highlight-text-color:  $green;
+$highlight-text-color:  $primaryColor;
 
 $menu-left-bg: 			$secondaryColor;
 $loading-bar-color:     $primaryColor;

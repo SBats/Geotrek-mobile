@@ -2,29 +2,15 @@
 // Variables
 // --------------------------------------------------
 
-
-// Grays
-// -------------------------
-
-$grayDarker:            #222;
-$grayDark:              #333;
-$gray:                  #555;
-$grayLight:             #999;
-$grayLighter:           #eee;
-$white:                 #fff;
-
-$green: 				#ABD76A;
-$greenDarker: 			#7da013;
-
-
 // Ionic overrides
 // -------------------------
-$dark:                            #494645;
+$dark:                    #494645;
 
 $bar-dark-text:					  #868383;
 $bar-dark-border:				  transparent;
-$bar-dark-active-bg:              transparent;
-$bar-dark-active-border:          transparent;
+$bar-dark-active-bg:      transparent;
+$bar-dark-active-border:  transparent;
+
 
 
 //
@@ -32,7 +18,7 @@ $bar-dark-active-border:          transparent;
 // --------------------------------------------------
 
 @import "_variables_default";
-@import "_variables_ecrins";
+@import "_customisation-variables";
 @import "bourbon/dist/_bourbon";
 @import "ionic/scss/_variables";
 @import "ionic/scss/_mixins";
@@ -74,7 +60,7 @@ $bar-dark-active-border:          transparent;
 }
 
 .menu-left {
-    background: $secondaryColor;
+    background: $menu-left-bg;
 
     .scroll-content {
         padding: 0 10px;
@@ -137,19 +123,6 @@ h1.app-title, .button.button-icon.app-title {
 
 .icon-big {
   font-size: 90px;
-}
-
-.bar .button.button-logo {
-	width: 45px;
-	background:url(../images/logo_pn.svg) 20px center no-repeat;
-	border: none;
-  padding-left: 45px;
-  background-size: auto 140%;
-	&:before {
-        position: absolute;
-        top: 0;
-        left: -14px;
-	}
 }
 
 .bar .button.button-icon [class*="ion-android"] {
@@ -259,3 +232,5 @@ h1.app-title, .button.button-icon.app-title {
 .icon-geotrek-difficulty2:before {
   content: "e";
 }
+
+@import "_customisation";
