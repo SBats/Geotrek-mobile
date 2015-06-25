@@ -15,7 +15,7 @@ geotrekAppSettings.constant('globalSettings', {
 .factory('settings', function () {
 
     // Variables that user can change
-    var DOMAIN_NAME = 'http://rando.ecrins-parcnational.fr',
+    var DOMAIN_NAME = 'http://rando.guillestrois.com',
         FORCE_DOWNLOAD = false,
         DEBUG = false,
         LOGS = true,  // if true, console logs are also saved in a file (device only)
@@ -33,7 +33,7 @@ geotrekAppSettings.constant('globalSettings', {
         TREK_COLOR: '#F89406'
     };
 
-    var GOOGLE_ANALYTICS_ID = 'UA-7988554-7';
+    var GOOGLE_ANALYTICS_ID = '';
 
     /* Variables for filesystem tree on device
      * FileSystem is created as follows:
@@ -71,8 +71,8 @@ geotrekAppSettings.constant('globalSettings', {
         TREKS_ZIP_NAME = 'trek.zip',
         TILES_FILE_NAME = 'global.zip';
 
-    var GEOTREK_DIR = 'rando-ecrins',
-        LOGS_FILENAME = 'rando-ecrins.log',
+    var GEOTREK_DIR = 'rando-guillestrois',
+        LOGS_FILENAME = 'rando-guillestrois.log',
         TILES_DIR = 'tiles',
         TREK_DIR = 'trek',
         POI_DIR = 'poi',
@@ -112,7 +112,7 @@ geotrekAppSettings.constant('globalSettings', {
             MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: DOMAIN_NAME + '/files/tiles/global.zip',
             //MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: "http://192.168.100.18:8888/files/tiles/global.zip",
             //FULL_DATA_REMOTE_FILE_URL: "http://192.168.100.18:8888/fr/files/api/trek/trek.zip",
-            LEAFLET_BACKGROUND_URL: 'http://rando.ecrins-parcnational.fr/tiles?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
+            LEAFLET_BACKGROUND_URL: 'http://rando.guillestrois.com/tiles?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
         },
         device: {
             CDV_ROOT: CDV_ROOT,
