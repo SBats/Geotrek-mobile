@@ -39,8 +39,9 @@ $ionicons-font-path: "./lib/ionic/fonts" !default;
 @import "./vendors/styles/vendors.scss";
 
 // Custom CSS for our modules
+@import "./layout/styles/layout.scss";
 @import "./filters/styles/filters.scss";
 @import "./map/styles/map.scss";
+@import "./list_display/styles/list_display.scss";
 @import "./detailed_trek/styles/detailed_trek.scss";
 @import "./pois/styles/pois.scss";
-

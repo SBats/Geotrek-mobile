@@ -12,6 +12,7 @@ function filtersFactory($q, TreksService) {
 		},
 		practices: {}
 	};
+	var filtersInitalized = false;
 
 	var formatFilters = function () {
 		var tmpFilter = {};
@@ -29,27 +30,29 @@ function filtersFactory($q, TreksService) {
 	var getFilters = function () {
 		var	deferred = $q.defer();
 
-		if (filters) {
+		if (filtersInitalized) {
 			deferred.resolve(filters);
 		}
-
-		TreksService.getTreks().then(function (treks) {
-			angular.forEach(treks.features, function (trek) {
-				if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
-					filters.difficulties[trek.properties.difficulty.label] = {
-						isActive: false,
-						id: trek.properties.difficulty.id
-					};
-				}
-				if (trek.properties.practice && !filters.practices[trek.properties.practice.label]) {
-					filters.practices[trek.properties.practice.label] = {
-						isActive: false,
-						id: trek.properties.practice.id
-					};
-				}
+		else {
+			TreksService.getTreks().then(function (treks) {
+				angular.forEach(treks.features, function (trek) {
+					if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
+						filters.difficulties[trek.properties.difficulty.label] = {
+							isActive: false,
+							id: trek.properties.difficulty.id
+						};
+					}
+					if (trek.properties.practice && !filters.practices[trek.properties.practice.label]) {
+						filters.practices[trek.properties.practice.label] = {
+							isActive: false,
+							id: trek.properties.practice.id
+						};
+					}
+				});
+				filtersInitalized = true;
+				deferred.resolve(filters);
 			});
-			deferred.resolve(filters);
-		});
+		}
 
 		return (deferred.promise);
 	};

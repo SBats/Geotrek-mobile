@@ -1,0 +1,9 @@
+<ion-view>
+	<ion-content overflow-scroll="false">
+		<ul>
+			<li ng-repeat="flatPage in flatPages" ui-sref="root.flat_page({ flatId: flatPage.id })">
+				{{ flatPage.title }}
+			</li>
+		</ul>
+	</ion-content>
+</ion-view>

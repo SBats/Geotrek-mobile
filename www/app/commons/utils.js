@@ -4,15 +4,22 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 
 	var self = this;
 
-	this.getAbsoluteUrl = function (relativeUrl, trekId) {
-		if (settings.isConnected) {
+	this.getAbsoluteUrl = function (relativeUrl, trekId, isTrekDownloaded) {
+		// If we are on a device and the resource is in the global files
+		if (settings.isDevice && angular.isUndefined(trekId)) {
+			return (settings.treksDir + '/' + constants.GLOBAL_DIR + relativeUrl);
+		}
+		// If we are connected on brower or we are browing a trek page on a device
+		else if (settings.isConnected) {
 			return (settings.apiUrl + relativeUrl);
 		}
-		else if (angular.isDefined(trekId)) {
+		// If we are browing a trek page on a device in disconnected mode
+		else  if (angular.isDefined(trekId) && isTrekDownloaded) {
 			return (settings.treksDir + '/' + trekId + relativeUrl);
 		}
+		// If we don't have any way to get the picture, we use the place holder
 		else {
-			return (settings.treksDir + '/' + constants.GLOBAL_DIR + relativeUrl);
+			return (settings.placeHolder);
 		}
 	};
 
@@ -85,32 +92,41 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 
 		function onDownloadNeeded() {
 
+			console.log('Download starting');
 			$cordovaFileTransfer.download(url, filepath + '/' + fileName)
 			.then(function (success) {
 				window.localStorage['globalZipLastUpdate'] = Date();
 				deferred.resolve(constants.FILE_DOWNLOADED);
 			},
-			function (error) { deferred.reject(error); });
+			function (error) { deferred.reject(error); },
+			function (progress) {
+			});
 		}
 
 		if (forceDownload === false) {
 
+			console.log('Checking filesystem');
 			$cordovaFile.checkFile(settings.cdvRoot + '/' + relativePath + '/',fileName)
 			.then(function (success) {
 
+				console.log('File already there');
 				// If the file is already on the device, we check if we need to update it
 				var lastModifiedDate = new Date(window.localStorage['globalZipLastUpdate']);
 				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
 
+				console.log(url);
 				$http.get(url, config)
 				.then(function (success) {
+					console.log('Update needed');
+					console.log(filepath);
 					// In case of answer 200, we remove the existing files, then download the file to update it
-					$cordovaFile.removeRecursively(filepath + '/', "")
+					$cordovaFile.removeFile(filepath + '/', fileName)
 					.then(onDownloadNeeded, function (error) {
 						deferred.reject(error);
 					});
 				},
 				function (response) {
+					console.log('Update not needed');
 					// In case of answer 304, the file is up to date, no need to download
 					deferred.resolve(constants.FILE_ALREADY_THERE);
 				});

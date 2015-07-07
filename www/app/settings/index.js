@@ -4,4 +4,4 @@ window.angular.module('app.settings', [])
 
 .constant('constants', require('./config').settingsConstants)
 
-.factory('settings', require('./config').settingsFactory);
+.factory('settings', require('./factories').settingsFactory);

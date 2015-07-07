@@ -32,7 +32,7 @@ function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDel
 		});
 	};
 
-	TreksService.isTrekDownloaded(trek.id).then(function (res) { $scope.$parent.isDownloaded = res; });
+	$scope.$parent.isDownloaded = trek.isDownloaded;
 	$scope.trek = trek;
 	$scope.isFavorite = FavoritesService.isFavorite(trek.id);
 	$scope.pois = pois;

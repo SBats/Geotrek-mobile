@@ -16,7 +16,8 @@ var dependencies = [
 'app.map',
 'app.favorites',
 'app.list_display',
-'app.detailed_trek'
+'app.detailed_trek',
+'app.flat_pages'
 ];
 
 
@@ -36,6 +37,7 @@ require('./map');
 require('./favorites');
 require('./list_display');
 require('./detailed_trek');
+require('./flat_pages');
 
 
 angularApp.run(function ($ionicPlatform, $cordovaNetwork) {

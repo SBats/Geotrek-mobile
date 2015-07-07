@@ -1,20 +1,27 @@
 <ion-view cache-view="false">
-    <ion-nav-title>
-        {{ title }}
-    </ion-nav-title>
+	<ion-nav-title>
+		{{ title }}
+	</ion-nav-title>
 
 	<ion-nav-buttons side="right" class="detailed_view_buttons">
-        <button class="button detailed_view_buttons ion-document-text {{ hideButtons }}"
-        ng-click="switchToText()"></button>
-    	<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
-        id="favorite_btn" ng-click="addToFavorites()"></button>
-    	<button class="button detailed_view_buttons ion-archive {{ isDownloaded ? 'is_downloaded' : '' }} {{ hideButtons }}"
-        id="download_btn" ng-click="downloadTrek()"></button>
+		<!-- Detailed trek buttons -->
+		<button class="button detailed_view_buttons ion-document-text {{ isDetailed ? '' : 'hide' }}"
+		ng-click="switchToText()"></button>
+		<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ isDetailed ? '' : 'hide' }}"
+		id="favorite_btn" ng-click="addToFavorites()"></button>
+		<button class="button detailed_view_buttons ion-archive {{ isDownloaded ? 'is_downloaded' : '' }} {{ isDetailed ? '' : 'hide' }}"
+		id="download_btn" ng-click="downloadTrek()"></button>
+
+		<!-- Global buttons -->
+		<button class="button {{ isGlobal ? '' : 'hide' }}" ui-sref="root.filters">
+			Filtrer
+		</button>
 	</ion-nav-buttons>
 
 	<geotrek-map size="big"></geotrek-map>
-    <div id="map_controllers" class="{{ hideButtons }}">
-        <i class="button icon ion-reply" ui-sref="root.map.global"></i>
-    </div>
+	<div id="map_controllers">
+		<i class="button icon ion-navigate" ng-click="locate()"></i>
+		<i class="button icon ion-reply {{ isDetailed ? '' : 'hide' }}" ui-sref="root.map.global"></i>
+	</div>
 	<ui-view name="map_view"></ui-view>
 </ion-view>

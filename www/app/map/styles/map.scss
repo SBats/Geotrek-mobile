@@ -12,9 +12,32 @@
 	top: 50px;
 	left: 8px;
 }
+#map_controllers i {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	vertical-align: middle;
+}
 
 .right-buttons .detailed_view_buttons {
 	font-size: 18px;
 	width: 33px;
 	margin-right: 5px;
+}
+
+.leaflet-marker-icon.trek-cluster {
+	border-color: #F89406; }
+.leaflet-marker-icon.trek-cluster .count {
+	border-radius: 50%;
+	background-color: #F89406;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-size: 12px;
+	min-width: 20px;
+	min-height: 20px;
+	display: block;
+	position: absolute;
+	bottom: -2px;
+	right: -2px; 
 }

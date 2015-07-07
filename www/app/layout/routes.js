@@ -4,7 +4,7 @@ var controller = require('./controllers');
 
 function layoutRoutes($locationProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
-    $ionicConfigProvider.views.transition('none');
+    //$ionicConfigProvider.views.transition('none');
     $urlRouterProvider.otherwise('/init');
 
     $stateProvider

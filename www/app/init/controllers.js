@@ -1,6 +1,6 @@
 'use strict';
 
-function initController($ionicHistory, $state, constants, settings, InitService) {
+function initController($ionicHistory, $state, $scope, constants, settings, InitService) {
 
 	$ionicHistory.nextViewOptions({	disableBack: true });
 	if (settings.isDevice) {
@@ -9,6 +9,9 @@ function initController($ionicHistory, $state, constants, settings, InitService)
 			var validState = false;
 			var states = $state.get();
 
+			if (!settings.isConnected) {
+				$scope.$parent.hide = false;
+			}
 			angular.forEach(states, function (state) {
 				if (state.name === res) {
 					validState = true;

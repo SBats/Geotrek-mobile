@@ -5,15 +5,21 @@ function mapController($state, $rootScope, $scope, $stateParams, LeafletService)
 	$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		if (fromState.name === 'root.map.detailed' || fromState.name === 'root.map.global') {
 			LeafletService.clearMapLayers();
+			LeafletService.stopWatch();
 		}
 	});
+
+	$scope.locate = function () {
+		LeafletService.followUser();
+	};
 }
 
 function globalMapController($rootScope, $scope, LeafletService) {
 
 	LeafletService.setGlobalSettings();
 
-	$scope.$parent.hideButtons = 'hide';
+	$scope.$parent.isGlobal = true;
+	$scope.$parent.isDetailed = false;
 	$scope.$parent.title = 'Carte';
 }
 
@@ -40,7 +46,8 @@ function detailedMapController($ionicHistory, $rootScope, $scope, $state, consta
 	};
 	TreksService.isTrekDownloaded(trek.id).then(function (res) { $scope.$parent.isDownloaded = res; });
 	$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
-	$scope.$parent.hideButtons = '';
+	$scope.$parent.isGlobal = false;
+	$scope.$parent.isDetailed = true;
 	$scope.$parent.trek = trek;
 	$scope.$parent.title = trek.properties.name;
 

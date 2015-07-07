@@ -1,13 +1,16 @@
 'use strict';
 
-function leafletService($state, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService) {
+function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService) {
 
+	var bounds;
+	var userLocationMarker = null;
+	var watchPosition;
 	var self = this;
 
 	self.trekLayers = {};
 	self.tileLayers = {};
 
-	this.makeMap = function (defaultMapSettings, coord, bounds) {
+	this.makeMap = function (defaultMapSettings, coord) {
 		var center = coord ? coord : [defaultMapSettings.LATITUDE, defaultMapSettings.LONGITUDE];
 
 		self.map = L.map('map', {
@@ -17,10 +20,52 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 			maxZoom: defaultMapSettings.DEFAULT_MAX_ZOOM,
 			scrollWheelZoom: true,
 			zoomControl: false,
-			maxBounds: bounds,
 			layers: L.tileLayer(settings.leafletBackgroundUrl)
 		});
 	};
+
+	this.stopWatch = function () {
+		if (angular.isDefined(watchPosition)) {
+			watchPosition.clearWatch();
+		}
+	};
+
+	this.centerOnUser = function () {
+		$cordovaGeolocation.getCurrentPosition().then(function (location) {
+
+			console.log('Centering');
+			self.map.setView([location.coords.latitude, location.coords.longitude]);
+			if (!self.map.hasLayer(userLocationMarker)) {
+				if (userLocationMarker) {
+					console.log('Marker created');
+					userLocationMarker.setLatLng([location.coords.latitude, location.coords.longitude]);
+					userLocationMarker.addTo(self.map);
+				}
+				else {
+					console.log('Marker not created');
+					userLocationMarker = L.marker([location.coords.latitude, location.coords.longitude], {
+						icon: IconsService.getUserLocationIcon()
+					});
+					userLocationMarker.addTo(self.map);
+				}
+			}
+		});
+	};
+
+	this.followUser = function () {
+		var watchOptions = {
+			frequency : 200,
+			timeout : 3000,
+			enableHighAccuracy: false
+		};
+
+		self.centerOnUser();
+		watchPosition = $cordovaGeolocation.watchPosition(watchOptions).then(null, null, function (location) {
+			userLocationMarker.setLatLng([location.coords.latitude, location.coords.longitude]);
+			self.map.setView([location.coords.latitude, location.coords.longitude]);
+		});
+	};
+
 
 	// Remove all custom layers on the map
 	this.clearMapLayers = function () {
@@ -31,19 +76,50 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 		});
 	};
 
-	// Sets markers on each trek's starting point
+	// Takes a marker coords, compares them to bounds et changes bounds if needed
+	this.compareBounds = function(coords) {
+		if (bounds.length === 0) {
+			bounds = [[coords.lat, coords.lng], [coords.lat, coords.lng]];
+		}
+		else {
+			bounds[0][0] = (coords.lat < bounds[0][0]) ? coords.lat : bounds[0][0];
+			bounds[0][1] = (coords.lng < bounds[0][1]) ? coords.lng : bounds[0][1];
+			bounds[1][0] = (coords.lat > bounds[1][0]) ? coords.lat : bounds[1][0];
+			bounds[1][1] = (coords.lng > bounds[1][1]) ? coords.lng : bounds[1][1];
+		}
+	};
+
+	// Enlarge the bounds by the given value
+	this.enlargeBounds = function(value) {
+		bounds[0][0] = bounds[0][0] - value;
+		bounds[0][1] = bounds[0][1] - value;
+		bounds[1][0] = bounds[1][0] + value;
+		bounds[1][1] = bounds[1][1] + value;
+	};
+
+	// Sets markers on each trek's starting point, creates the global bounds
 	this.makeTreksLayer = function () {
 		var marker;
 
-		self.trekLayers['global'] = new L.featureGroup();
+		bounds = [];
+		self.trekLayers['global'] = new L.MarkerClusterGroup({
+			iconCreateFunction: function(cluster) {
+				return IconsService.getClusterIcon(cluster);
+			}
+		});
 		FiltersFactory.getFilteredTreks().then(function (treks) {
 			angular.forEach(treks, function (trek) {
+
 				marker = utils.getMarkerFromTrek(trek);
 				marker.on('click', function () {
 					$state.go('root.map.detailed', { trekId: trek.id });
 				});
 				self.trekLayers['global'].addLayer(marker);
+
+				self.compareBounds(marker._latlng);
 			});
+			self.enlargeBounds(0.1);
+			self.map.setMaxBounds(bounds);
 		});
 	};
 
@@ -51,21 +127,22 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	this.setGlobalSettings = function () {
 		var mapContainer = document.getElementById('map').innerHTML;
 		var coord = { lat: constants.leaflet.global.LATITUDE, lng: constants.leaflet.global.LONGITUDE };
-		var bounds = [ [coord.lat - 0.6, coord.lng - 0.6] , [coord.lat + 0.6, coord.lng + 0.6] ]; 
 
 		if (mapContainer === '') {
-			self.makeMap(constants.leaflet.global, coord, bounds);
+			self.makeMap(constants.leaflet.global, coord);
 			self.trekLayers = {};
 		}
 		else {
 			self.map.options.minZoom = constants.leaflet.global.DEFAULT_MIN_ZOOM;
 			self.map.options.maxZoom = constants.leaflet.global.DEFAULT_MAX_ZOOM;
 			self.map.setZoom(constants.leaflet.global.DEFAULT_ZOOM);
-			self.map.setMaxBounds(bounds);
 		}
 		self.clearMapLayers();
 		if (!self.trekLayers['global']) {
 			self.makeTreksLayer();
+		}
+		if (bounds.length !== 0) {
+			self.map.setMaxBounds(bounds);
 		}
 		self.map.addLayer(self.trekLayers['global']);
 	};
@@ -73,15 +150,22 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	// Makes the POI markers
 	this.makePois = function (trek) {
 		var marker;
+		var poisLayer;
 
+		poisLayer = new L.MarkerClusterGroup({
+			iconCreateFunction: function(cluster) {
+				return IconsService.getClusterIcon(cluster);
+			}
+		});
 		PoisService.getTrekPois(trek.id).then(function (pois) {
 			angular.forEach(pois, function (poi) {
 				marker = utils.getMarkerFromPoi(poi);
 				marker.on('click', function () {
 					$state.go('root.poi', { poiId: poi.id, trekId : trek.id, view: 'map' });
 				});
-				self.trekLayers[trek.id].addLayer(marker);
+				poisLayer.addLayer(marker);
 			});
+			self.trekLayers[trek.id].addLayer(poisLayer);
 		});
 	};
 
@@ -97,13 +181,10 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	};
 
 	this.addTrekTileLayer = function (trekId) {
-		console.log('Adding new tilelayer');
 		if (angular.isUndefined(self.tileLayers[trekId])) {
-			console.log('tilelayer created');
 			self.tileLayers[trekId] = L.tileLayer(settings.tilesDir + '/' + trekId + '/{z}/{x}/{y}.png');
 		}
 		if (!self.map.hasLayer(self.tileLayers[trekId])) {
-			console.log('tilelayer added on map');
 			self.tileLayers[trekId].addTo(self.map);
 		}
 	};
@@ -112,22 +193,22 @@ function leafletService($state, constants, settings, utils, FiltersFactory, Icon
 	this.setDetailedSettings = function (trek) {
 		var coord = utils.getStartPoint(trek);
 		var mapContainer = document.getElementById('map').innerHTML;
-		var bounds = [ [coord.lat - 0.05, coord.lng - 0.05] , [coord.lat + 0.05, coord.lng + 0.05] ]; 
+		var bounds = [ [coord.lat - 0.1, coord.lng - 0.1] , [coord.lat + 0.1, coord.lng + 0.1] ]; 
 
 		if (mapContainer === '') {
-			self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng], bounds);
+			self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng]);
 			self.trekLayers = {};
 		}
 		else {
 			self.map.setZoomAround([coord.lat, coord.lng], constants.leaflet.detailed.DEFAULT_ZOOM);
 			self.map.options.minZoom = constants.leaflet.detailed.DEFAULT_MIN_ZOOM;
 			self.map.options.maxZoom = constants.leaflet.detailed.DEFAULT_MAX_ZOOM;
-			self.map.setMaxBounds(bounds);
 		}
 		if (settings.isDevice && !settings.isConnected) {
 			self.addTrekTileLayer(trek.id);
 		}
 		self.clearMapLayers();
+		self.map.setMaxBounds(bounds);
 		if (!self.trekLayers[trek.id]) {
 			self.makeTrek(trek);
 			self.makePois(trek);
@@ -159,6 +240,11 @@ function iconsService() {
 			iconSize: [64, 64],
 			iconAnchor: [32, 64],
 			labelAnchor: [20, -50]
+		}),
+		user_location_icon: L.icon({
+			iconUrl: 'img/map/user_position.png',
+			iconSize: [5, 5],
+			iconAnchor: [2, 2],
 		}),
 		arrival_icon: L.icon({
 			iconUrl: 'images/marker-target.png',
@@ -209,6 +295,10 @@ function iconsService() {
 
 	this.getDepartureIcon = function() {
 		return trek_icons.departure_icon;
+	};
+
+	this.getUserLocationIcon = function() {
+		return trek_icons.user_location_icon;
 	};
 
 	this.getArrivalIcon = function() {

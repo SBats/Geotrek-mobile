@@ -1,0 +1,16 @@
+#disconnected_notification {
+	position: absolute;
+	top: 44px;
+	z-index: 5;
+	width: 100%;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	padding: 5px;
+	transition: top .5s;
+}
+
+#disconnected_notification i {
+	font-size: 14px;
+	position: absolute;
+	right: 1%;
+}

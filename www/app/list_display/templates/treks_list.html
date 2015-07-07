@@ -1,21 +1,46 @@
-<ion-view>
-    <ion-nav-buttons side="right">
-        <button class="button" ui-sref="root.filters">
-        	Filtrer
-        </button>
-    </ion-nav-buttons>
-   	<ion-content overflow-scroll="false">
-	    <ul class="list">
-	        <li ng-repeat="trek in treks" ui-sref="root.detailed_trek({ trekId: trek.id })" class="item-thumbnail-left item">
-	            <img class="thumbnail" ng-src="{{ trek.properties.thumbnail }}"/>
-	            <h3>{{ trek.properties.name }} | {{ trek.id }}</h3>
-	            <p class="departure">{{ 'trek_list.departure' }} : {{ trek.properties.departure }}</p>
-	            <p class="difficulty">{{ trek.properties.difficulty.label }} - {{ trek.properties.duration_pretty }}</p>
-	            <p ng-if="trek.distanceFromUser">{{ 'trek_list.distance' }} : {{ trek.distanceFromUser }}km</p>
-	            <div class="trek-list__item__detail__actions">
-	                <i ng-if="trek.tiles.isDownloaded && !trek.tiles.inDownloadProgress" class="icon ion-archive"></i>
-	            </div>
-	        </li>
-	    </ul>
+<ion-view cache-view="false">
+	
+	<ion-nav-buttons side="right">
+		<button class="button" ui-sref="root.filters">
+			Filtrer
+		</button>
+	</ion-nav-buttons>
+	
+	<ion-nav-title>
+		Treks gallery
+	</ion-nav-title>
+
+	<ion-content overflow-scroll="false">
+
+		<div class="treks_gallery">
+			<div ng-repeat="trek in treks" class="trek_in_gallery" ui-sref="root.detailed_trek({ trekId: trek.id })">
+				<div class="img_cropper">
+					<img class="thumbnail" ng-src="{{ trek.properties.pictures[0].url }}"/>
+				</div>
+				<div class="description">
+					<p>{{ trek.properties.name }}</p>
+					<p class="difficulty">{{ trek.properties.difficulty.label }} - {{ trek.properties.duration_pretty }} - {{ trek.properties.practice.label }}</p>
+					<p>
+						<i class="icon ion-star {{ isFavorite(trek.id) ? 'is_favorite' : '' }}"></i>
+						<i class="icon ion-archive {{ trek.isDownloaded ? 'is_downloaded' : '' }}"></i>
+					</p>
+				</div>
+			</div>
+		</div>
+			
+		<!--
+		<ul class="list">
+			<li ng-repeat="trek in treks" ui-sref="root.detailed_trek({ trekId: trek.id })" class="item-thumbnail-left item">
+				<img class="thumbnail" ng-src="{{ trek.properties.thumbnail }}"/>
+				<h3>{{ trek.properties.name }} | {{ trek.id }}</h3>
+				<p class="departure">{{ 'trek_list.departure' }} : {{ trek.properties.departure }}</p>
+				<p class="difficulty">{{ trek.properties.difficulty.label }} - {{ trek.properties.duration_pretty }}</p>
+				<p ng-if="trek.distanceFromUser">{{ 'trek_list.distance' }} : {{ trek.distanceFromUser }}km</p>
+				<div class="trek-list__item__detail__actions">
+					<i ng-if="trek.tiles.isDownloaded && !trek.tiles.inDownloadProgress" class="icon ion-archive"></i>
+				</div>
+			</li>
+		</ul>
+		-->
 	</ion-content>
 </ion-view>
