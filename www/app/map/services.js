@@ -2,12 +2,12 @@
 
 function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService) {
 
-	var bounds;
 	var userLocationMarker = null;
 	var watchPosition;
 	var self = this;
 
 	self.trekLayers = {};
+	self.bounds = {};
 	self.tileLayers = {};
 
 	this.makeMap = function (defaultMapSettings, coord) {
@@ -77,7 +77,7 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 	};
 
 	// Takes a marker coords, compares them to bounds et changes bounds if needed
-	this.compareBounds = function(coords) {
+	this.compareBounds = function(bounds, coords) {
 		if (bounds.length === 0) {
 			bounds = [[coords.lat, coords.lng], [coords.lat, coords.lng]];
 		}
@@ -87,22 +87,24 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 			bounds[1][0] = (coords.lat > bounds[1][0]) ? coords.lat : bounds[1][0];
 			bounds[1][1] = (coords.lng > bounds[1][1]) ? coords.lng : bounds[1][1];
 		}
+		return (bounds);
 	};
 
 	// Enlarge the bounds by the given value
-	this.enlargeBounds = function(value) {
+	this.enlargeBounds = function(bounds, value) {
 		bounds[0][0] = bounds[0][0] - value;
 		bounds[0][1] = bounds[0][1] - value;
 		bounds[1][0] = bounds[1][0] + value;
 		bounds[1][1] = bounds[1][1] + value;
+		return (bounds);
 	};
 
 	// Sets markers on each trek's starting point, creates the global bounds
 	this.makeTreksLayer = function () {
 		var marker;
 
-		bounds = [];
-		self.trekLayers['global'] = new L.MarkerClusterGroup({
+		self.bounds.global = [];
+		self.trekLayers.global = new L.MarkerClusterGroup({
 			iconCreateFunction: function(cluster) {
 				return IconsService.getClusterIcon(cluster);
 			}
@@ -116,10 +118,10 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 				});
 				self.trekLayers['global'].addLayer(marker);
 
-				self.compareBounds(marker._latlng);
+				self.bounds.global = self.compareBounds(self.bounds.global, marker._latlng);
 			});
-			self.enlargeBounds(0.1);
-			self.map.setMaxBounds(bounds);
+			self.bounds.global = self.enlargeBounds(self.bounds.global, 0.1);
+			self.map.setMaxBounds(self.bounds.global);
 		});
 	};
 
@@ -141,8 +143,8 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		if (!self.trekLayers['global']) {
 			self.makeTreksLayer();
 		}
-		if (bounds.length !== 0) {
-			self.map.setMaxBounds(bounds);
+		if (self.bounds.global.length !== 0) {
+			self.map.setMaxBounds(self.bounds.global);
 		}
 		self.map.addLayer(self.trekLayers['global']);
 	};
@@ -178,6 +180,14 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		self.trekLayers[trek.id] = new L.featureGroup();
 		self.trekLayers[trek.id].addLayer(route);
 		self.trekLayers[trek.id].addLayer(marker);
+
+		if (angular.isUndefined(self.bounds[trek.id])) {
+			self.bounds[trek.id] = [];
+			angular.forEach(trek.geometry.coordinates, function (coords) {
+				self.bounds[trek.id] = self.compareBounds(self.bounds[trek.id], { lat : coords[1], lng : coords[0] });
+			});
+			self.bounds[trek.id] = self.enlargeBounds(self.bounds[trek.id], 0.05);
+		}
 	};
 
 	this.addTrekTileLayer = function (trekId) {
@@ -208,11 +218,11 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 			self.addTrekTileLayer(trek.id);
 		}
 		self.clearMapLayers();
-		self.map.setMaxBounds(bounds);
 		if (!self.trekLayers[trek.id]) {
 			self.makeTrek(trek);
 			self.makePois(trek);
 		}
+		self.map.setMaxBounds(self.bounds[trek.id]);
 		self.map.addLayer(self.trekLayers[trek.id]);
 	};
 
