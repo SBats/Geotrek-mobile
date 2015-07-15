@@ -36,9 +36,11 @@ function favoritesService($q, TreksService) {
 	};
 
 	this.addToFavorites = function (id) {
-		self.favoritesId.push(id);
-		window.localStorage['favorites'] = JSON.stringify(self.favoritesId);
-		self.loadFavorites();
+		if (self.favoritesId.indexOf(id) > -1)  {
+			self.favoritesId.push(id);
+			window.localStorage['favorites'] = JSON.stringify(self.favoritesId);
+			self.loadFavorites();
+		}
 	};
 
 	this.removeFavorite = function (id) {

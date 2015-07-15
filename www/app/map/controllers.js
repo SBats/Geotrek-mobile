@@ -30,22 +30,6 @@ function detailedMapController($ionicHistory, $rootScope, $scope, $state, consta
 		$state.go('root.detailed_trek', { trekId: trek.id });
 	};
 
-	$scope.$parent.downloadTrek = function () {
-		TreksService.deleteOrDownload(trek.id).then(function (res) {
-			$scope.$parent.isDownloaded = (res === constants.TREK_DOWNLOADED);
-			if (!FavoritesService.isFavorite(trek.id)) {
-				FavoritesService.changeFavorites(trek.id);
-				$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
-			}
-		});
-	};
-
-	$scope.$parent.addToFavorites = function () {
-		FavoritesService.changeFavorites(trek.id);
-		$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
-	};
-	TreksService.isTrekDownloaded(trek.id).then(function (res) { $scope.$parent.isDownloaded = res; });
-	$scope.$parent.isFavorite = FavoritesService.isFavorite(trek.id);
 	$scope.$parent.isGlobal = false;
 	$scope.$parent.isDetailed = true;
 	$scope.$parent.trek = trek;

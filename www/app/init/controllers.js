@@ -21,7 +21,7 @@ function initController($ionicHistory, $state, $scope, constants, settings, Init
 		});
 	}
 	else {
-		$state.go('root.map.global');
+		$state.go(constants.CONNECTED_REDIRECTION);
 	}
 }
 

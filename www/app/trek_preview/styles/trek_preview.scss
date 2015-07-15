@@ -1,0 +1,20 @@
+#download_btn_container {
+	width: 158px;
+	height: 47px;
+	border: 1px solid #b2b2b2;
+	border-radius: 2px;
+}
+
+#download_btn_container #download_btn {
+	height: 100%;
+	width:100%;
+	text-align: center;
+	line-height: 47px;
+	vertical-align: middle;
+}
+
+#download_btn_container #loading_bar {
+	height:100%;
+	width: 0%;
+	background-color: green;
+}

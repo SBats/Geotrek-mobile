@@ -100,6 +100,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 			},
 			function (error) { deferred.reject(error); },
 			function (progress) {
+				deferred.notify(progress);
 			});
 		}
 
@@ -190,13 +191,11 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 		self.downloadFile(url, filepath, fileName, forceDownload)
 		.then(onDownloadSuccess, function (error) {
 			deferred.reject(error);
+		}, function (progress) {
+			deferred.notify(progress);
 		});
 
 		return (deferred.promise);
-	};
-
-	this.readDir = function() {
-
 	};
 }
 

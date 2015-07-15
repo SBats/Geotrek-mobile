@@ -7,10 +7,6 @@
 		<!-- Detailed trek buttons -->
 		<button class="button detailed_view_buttons ion-document-text {{ isDetailed ? '' : 'hide' }}"
 		ng-click="switchToText()"></button>
-		<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ isDetailed ? '' : 'hide' }}"
-		id="favorite_btn" ng-click="addToFavorites()"></button>
-		<button class="button detailed_view_buttons ion-archive {{ isDownloaded ? 'is_downloaded' : '' }} {{ isDetailed ? '' : 'hide' }}"
-		id="download_btn" ng-click="downloadTrek()"></button>
 
 		<!-- Global buttons -->
 		<button class="button {{ isGlobal ? '' : 'hide' }}" ui-sref="root.filters">

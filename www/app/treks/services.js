@@ -76,6 +76,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 			utils.downloadAndUnzip(settings.tilesZipUrl + trekId + '.zip', settings.tilesDir + '/' + trekId, trekId + '.zip')
 			.then(function (success) {
+				self.treks[trekId].isDownloaded = true;
 				alert('Trek téléchargé');
 			}, function (error) {
 				console.log(error);
@@ -83,19 +84,6 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 		}, function (error) {
 			console.log(error);
-		});
-	};
-
-	this.getDownloadedTreks = function () {
-
-		self.getTreks().then(function (treks) {
-			angular.forEach(treks.features, function(trek) {
-
-				$cordovaFile.checkDir(settings.treksDir + '/', String(trekId))
-				.then(function (success) {
-					
-				});
-			});
 		});
 	};
 

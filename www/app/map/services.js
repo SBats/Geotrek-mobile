@@ -203,7 +203,6 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 	this.setDetailedSettings = function (trek) {
 		var coord = utils.getStartPoint(trek);
 		var mapContainer = document.getElementById('map').innerHTML;
-		var bounds = [ [coord.lat - 0.1, coord.lng - 0.1] , [coord.lat + 0.1, coord.lng + 0.1] ]; 
 
 		if (mapContainer === '') {
 			self.makeMap(constants.leaflet.detailed, [coord.lat, coord.lng]);

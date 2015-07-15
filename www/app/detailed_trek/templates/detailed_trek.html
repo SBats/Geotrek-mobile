@@ -4,12 +4,7 @@
 	</ion-nav-title>
 
 	<ion-nav-buttons side="right" class="detailed_view_buttons">
-		<button class="button detailed_view_buttons ion-map {{ hideButtons }}"
-		ng-click="switchToMap()"></button>
-		<button class="button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }} {{ hideButtons }}"
-		id="favorite_btn" ng-click="addToFavorites()"></button>
-		<button class="button detailed_view_buttons ion-archive {{ isDownloaded ? 'is_downloaded' : '' }} {{ hideButtons }}"
-		id="download_btn" ng-click="downloadTrek()"></button>
+		<button class="button detailed_view_buttons ion-map {{ hideButtons }}" ng-click="switchToMap()"></button>
 	</ion-nav-buttons>
 
 	<ion-content overflow-scroll="false">
