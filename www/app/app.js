@@ -15,7 +15,6 @@ var dependencies = [
 'app.treks',
 'app.pois',
 'app.map',
-'app.favorites',
 'app.list_display',
 'app.trek_preview',
 'app.detailed_trek',
@@ -38,7 +37,6 @@ require('./filters');
 require('./treks');
 require('./pois');
 require('./map');
-require('./favorites');
 require('./list_display');
 require('./trek_preview');
 require('./detailed_trek');
