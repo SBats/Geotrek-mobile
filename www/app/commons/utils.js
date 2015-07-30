@@ -1,6 +1,6 @@
 'use strict';
 
-function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTransfer, settings, constants, IconsService) {
+function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile, $cordovaFileTransfer, settings, constants, IconsService) {
 
 	var self = this;
 
@@ -90,6 +90,10 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 			forceDownload = settings.forceDownload;
 		}
 
+		// if ($cordovaNetwork.getNetword !== 'wifi' && window.localStorage.syndMode === 'wifi') {
+		// 	deferred.reject('wifionly');
+		// }
+
 		function onDownloadNeeded() {
 
 			console.log('Download starting');
@@ -107,12 +111,12 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaFile, $cordovaFileTra
 		if (forceDownload === false) {
 
 			console.log('Checking filesystem');
-			$cordovaFile.checkFile(settings.cdvRoot + '/' + relativePath + '/',fileName)
+			$cordovaFile.checkFile(settings.cdvRoot + '/' + relativePath + '/', fileName)
 			.then(function (success) {
 
 				console.log('File already there');
 				// If the file is already on the device, we check if we need to update it
-				var lastModifiedDate = new Date(window.localStorage['globalZipLastUpdate']);
+				var lastModifiedDate = new Date(window.localStorage['globalxZipLastUpdate']);
 				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
 
 				console.log(url);

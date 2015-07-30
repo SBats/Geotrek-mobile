@@ -27,14 +27,17 @@ function filtersFactory($q, TreksService) {
 	};
 
 	//Gets the difficulties and practices filters by searching the treks
-	var getFilters = function () {
+	var getFilters = function (forceUpdate) {
 		var	deferred = $q.defer();
 
-		if (filtersInitalized) {
+		if (angular.isUndefined(forceUpdate)) {
+			forceUpdate = false;
+		}
+		if (!forceUpdate && filtersInitalized) {
 			deferred.resolve(filters);
 		}
 		else {
-			TreksService.getTreks().then(function (treks) {
+			TreksService.getTreks(forceUpdate).then(function (treks) {
 				angular.forEach(treks.features, function (trek) {
 					if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
 						filters.difficulties[trek.properties.difficulty.label] = {

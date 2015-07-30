@@ -1,6 +1,6 @@
 <ion-view>
 	<ion-nav-title>
-		Détail du trek
+		{{ 'detailed_trek.title' | translate }}
 	</ion-nav-title>
 
 	<ion-nav-buttons side="right" class="detailed_view_buttons">
@@ -28,9 +28,15 @@
 
 				<div class="center_div_wrapper">
 					<div class="detailed_trek_tab_buttons">
-						<div id="infos" ng-click="changeTab(0, 'infos')" class="float_left {{ selected }} ">Le trek</div>
-						<div id="access" ng-click="changeTab(1, 'access')" class="float_left {{ selected }}">Infos pratiques</div>
-						<div id="others" ng-click="changeTab(2, 'others')" class="float_left {{ selected }}">Treks liés</div>
+						<div id="infos" ng-click="changeTab(0, 'infos')" class="float_left {{ selected }} ">
+							{{ 'detailed_trek.trek' | translate }}
+						</div>
+						<div id="access" ng-click="changeTab(1, 'access')" class="float_left {{ selected }}">
+							{{ 'detailed_trek.infos' | translate }}
+						</div>
+						<div id="others" ng-click="changeTab(2, 'others')" class="float_left {{ selected }}">
+							{{ 'detailed_trek.linked' | translate }}
+						</div>
 					</div>
 				</div>
 
@@ -47,7 +53,7 @@
 						<p ng-bind-html="trek.properties.ambiance"></p>
 						<p ng-bind-html="trek.properties.description"></p>
 
-						<h1>Points d'intêret :</h1>
+						<h1>{{ 'detailed_trek.poi' | translate }} :</h1>
 						<div class="float_left poi_gallery" ng-repeat="poi in pois"
 						ui-sref="root.poi({ poiId: poi.id, trekId: trek.id, view: 'text' })">
 							<img class="gallery_content" ng-src="{{ poi.properties.pictures[0].url }}" \>
@@ -64,7 +70,7 @@
 
 						<div ng-if="trek.properties.public_transport" class="info_card float_left">
 							<div class="info_card_content">
-								<div class="title">Transports</div>
+								<div class="title">{{ 'detailed_trek.transport' | translate }}</div>
 								<div class="text">
 									<p ng-bind-html="trek.properties.public_transport"></p>
 								</div>
@@ -73,7 +79,7 @@
 
 						<div ng-if="trek.properties.access" class="info_card float_left">
 							<div class="info_card_content">
-								<div class="title">Accès routiers</div>
+								<div class="title">{{ 'detailed_trek.road_access' | translate }}</div>
 								<div class="text">
 									<p ng-bind-html="trek.properties.access"></p>
 								</div>
@@ -89,7 +95,7 @@
 										{{ desk.street }}<br \>
 										{{ desk.postal_code }} {{ desk.municipality }}<br \>
 										<a ng-if="desk.website" href="{{ desk.website }}">
-											Site web<br \>
+											{{ 'detailed_trek.road_access' | translate }}<br \>
 										</a>
 										<a ng-if="desk.email" href="mailto:{{ desk.email }}">
 											{{ desk.email }}<br \>

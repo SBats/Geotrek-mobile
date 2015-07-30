@@ -1,19 +1,14 @@
 <ion-view>
 	
-	<ion-nav-buttons side="right">
-		<button class="button" ui-sref="root.filters">
-			Filtrer
-		</button>
-	</ion-nav-buttons>
-	
 	<ion-nav-title>
-		{{ 'treks_list.title' | translate }}
+		Mes randos
 	</ion-nav-title>
 
 	<ion-content overflow-scroll="false">
 
 		<div class="treks_gallery">
-			<div ng-repeat="trek in treks" class="trek_in_gallery" ng-click="goToTrek(trek.id)">
+			<div ng-repeat="trek in treks" class="trek_in_gallery"
+			ui-sref="{{ trek.isDownloaded ? 'root.detailed_trek' : 'root.trek_preview' }}({ trekId: trek.id })">
 				<div class="corner_action" id="download"
 				ng-click="downloadCallback(trek.id); $event.stopPropagation();">
 					<i class="icon ion-archive {{ trek.isDownloaded ? 'is_downloaded' : '' }}" id="dl_{{ trek.id }}"></i>

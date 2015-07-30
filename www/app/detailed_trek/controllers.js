@@ -1,6 +1,6 @@
 'use strict';
 
-function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, utils, constants, settings, TreksService, FavoritesService) {
+function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, utils, constants, settings, TreksService) {
 
 	console.log(trek);
 

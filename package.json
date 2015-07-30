@@ -40,7 +40,8 @@
     "org.apache.cordova.file",
     "org.apache.cordova.file-transfer",
     "cordova-plugin-zip",
-    "cordova-plugin-network-information"
+    "cordova-plugin-network-information",
+    "cordova-plugin-globalization"
   ],
   "cordovaPlatforms": [
     "android"

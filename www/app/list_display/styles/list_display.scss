@@ -15,10 +15,30 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
+	top: -30px;
 }
 .treks_gallery .trek_in_gallery .img_cropper img {
 	width: 100%;
 	min-width: 450px;
+}
+
+.treks_gallery .trek_in_gallery .corner_action {
+	position: relative;
+	height: 30px;
+	width: 30px;
+	font-size: 25px;
+	z-index: 2;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+}
+.treks_gallery .trek_in_gallery .corner_action#favorite {
+	left: 0px;
+	float: left;
+}
+.treks_gallery .trek_in_gallery .corner_action#download {
+	right: 0px;
+	float: right;
 }
 
 .treks_gallery .trek_in_gallery .description {
@@ -28,10 +48,10 @@
 .treks_gallery .trek_in_gallery .description i {
 	font-size: 18px;
 }
-.treks_gallery .trek_in_gallery .description i.is_favorite {
+.treks_gallery .is_favorite {
 	color: yellow;
 }
-.treks_gallery .trek_in_gallery .description i.is_downloaded {
+.treks_gallery .is_downloaded {
 	color: blue;
 }
 

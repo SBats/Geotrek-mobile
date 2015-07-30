@@ -21,6 +21,7 @@ $ionicons-font-path: "./lib/ionic/fonts" !default;
 
 //Generic rules
 .float_left { float: left; }
+.float_right { float: right; }
 .clear { float: none; }
 
 .center_div_wrapper {
@@ -46,3 +47,4 @@ $ionicons-font-path: "./lib/ionic/fonts" !default;
 @import "./trek_preview/styles/trek_preview.scss";
 @import "./detailed_trek/styles/detailed_trek.scss";
 @import "./pois/styles/pois.scss";
+@import "./user_settings/styles/user_settings.scss";

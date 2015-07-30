@@ -26,14 +26,18 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		});
 	};
 
-	this.getTreks = function () {
+	this.getTreks = function (forceUpdate) {
 		var deferred = $q.defer();
 		var promises = [];
 
-		if (self.treks) {
+		if (angular.isUndefined(forceUpdate)) {
+			forceUpdate = false;
+		}
+		if (!forceUpdate && self.treks) {
 			deferred.resolve(self.treks);
 		}
 		else {
+			treksResource = $resource(settings.treksUrl, {}, { query: { method: 'GET', cache: true } });
 			treksResource.query().$promise
 			.then(function(file) {
 				self.treks = angular.fromJson(file);
@@ -55,6 +59,22 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	this.getDownloadedTreks = function (trekId) {
+		var deferred = $q.defer();
+
+		self.getTreks().then(function (treks) {
+
+			var downloadedTreks = [];
+			angular.forEach(treks.features, function (trek) {
+				if (trek.isDownloaded) {
+					downloadedTreks.push(trek);
+				}
+			});
+			deferred.resolve(downloadedTreks);
+		});
+		return (deferred.promise);
+	};
+
 	this.getTrek = function (trekId) {
 		var deferred = $q.defer();
 
@@ -69,53 +89,60 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	this.setDownloadedValue = function(trekId, value) {
+
+		this.getTreks().then(function (treks) {
+			angular.forEach(treks.features, function(trek) {
+				if (trek.id === Number(trekId)) {
+					trek.isDownloaded = value;
+				}
+			});
+		});
+	};
+
 	this.downloadTrek = function (trekId) {
+
+		var deferred = $q.defer();
 
 		utils.downloadAndUnzip(settings.trekZipUrl + trekId + '.zip', settings.treksDir + '/' + trekId, trekId + '.zip')
 		.then(function (downloadRes) {
 
 			utils.downloadAndUnzip(settings.tilesZipUrl + trekId + '.zip', settings.tilesDir + '/' + trekId, trekId + '.zip')
 			.then(function (success) {
-				self.treks[trekId].isDownloaded = true;
-				alert('Trek téléchargé');
+				self.setDownloadedValue(trekId, true);
+				deferred.resolve('ok');
 			}, function (error) {
-				console.log(error);
+				deferred.reject(error);
+			}, function (progress) {
+				deferred.notify(String((progress.loaded / progress.total) * 50 + 50) + '%');
 			});
 
 		}, function (error) {
-			console.log(error);
+			deferred.reject(error);
+		}, function (progress) {
+			deferred.notify(String((progress.loaded / progress.total) * 50) + '%');
 		});
+		return (deferred.promise);
 	};
 
 	this.deleteTrek = function (trekId) {
+
+		var deferred = $q.defer();
 
 		$cordovaFile.removeRecursively(settings.treksDir, String(trekId))
 		.then(function (success) {
 
 			$cordovaFile.removeRecursively(settings.tilesDir, String(trekId))
 			.then(function (success) {
-				alert('Trek supprimé');
+				self.setDownloadedValue(trekId, false);
+				deferred.resolve('ok');
 			}, function (error) {
-				console.log(error);
+				deferred.reject(error);
 			});
 
 		}, function (error) {
-			console.log(error);
+			deferred.reject(error);
 		});
-	};
-
-	this.deleteOrDownload = function (trekId) {
-		var deferred = $q.defer();
-
-		$cordovaFile.checkDir(settings.treksDir + '/', String(trekId))
-		.then(function (success) {
-			self.deleteTrek(trekId);
-			deferred.resolve(constants.TREK_DELETED);
-		}, function (error) {
-			self.downloadTrek(trekId);
-			deferred.resolve(constants.TREK_DOWNLOADED);
-		});
-
 		return (deferred.promise);
 	};
 

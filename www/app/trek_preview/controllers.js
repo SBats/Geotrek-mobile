@@ -1,46 +1,41 @@
 'use strict';
 
-function trekPreviewController($scope, trek, constants, settings, utils, FavoritesService, TreksService) {
-
-	$scope.addToFavorites = function () {
-		FavoritesService.changeFavorites(trek.id);
-		$scope.isFavorite = FavoritesService.isFavorite(trek.id);
-	};
+function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek, constants, settings, utils, TreksService) {
 
 	$scope.downloadTrek = function () {
 
 		var loadingBar = document.getElementById('loading_bar');
 
-		$scope.downloadButton = 'hide';
-		$scope.loadingBar = '';
-		$scope.currentDownload = 'Trek infos';
+		$ionicPopup.confirm({
+			title: 'Téléchargement',
+			template: 'Etes vous sur de vouloir télécharger cette rando ?'
+		}).then(function (res) {
+			if (res) {
 
-		utils.downloadAndUnzip(settings.trekZipUrl + trek.id + '.zip', settings.treksDir + '/' + trek.id, trek.id + '.zip')
-		.then(function (downloadRes) {
+				$scope.downloadButton = 'hide';
+				$scope.loadingBar = '';
 
-			$scope.currentDownload = 'Map tiles';
-			utils.downloadAndUnzip(settings.tilesZipUrl + trek.id + '.zip', settings.tilesDir + '/' + trek.id, trek.id + '.zip')
-			.then(function (success) {
+				TreksService.downloadTrek(trek.id).then(function (success) {
 
-				$scope.currentDownload = 'Finished';
-				FavoritesService.addToFavorites(trek.id);
-			}, function (error) {
-				console.log(error);
-			}, function (progress) {
-				loadingBar.style.width = String((progress.loaded / progress.total) * 50 + 50) + '%';
-			});
+					$ionicPopup.alert({
+						template: 'Téléchargement terminé'
+					}).then(function (res) {
+						$ionicHistory.nextViewOptions({	disableBack: true });
+						$state.go('root.detailed_trek', { trekId: trek.id });
+					});
 
-		}, function (error) {
-			console.log(error);
-		}, function (progress) {
-			loadingBar.style.width = String((progress.loaded / progress.total) * 50) + '%';
+				}, function (error) {
+					console.log(error);
+				}, function (progress) {
+					loadingBar.style.width = progress;
+				});
+			}
 		});
 	};
 
 	$scope.downloadButton = '';
 	$scope.loadingBar = 'hide';
 
-	$scope.isFavorite = FavoritesService.isFavorite(trek.id);
 	$scope.trek = trek;
 }
 

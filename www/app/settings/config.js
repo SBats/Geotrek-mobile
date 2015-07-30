@@ -2,7 +2,8 @@
 
 var settingsConstants = {
 
-	API_URL: 'http://rando.loire-atlantique.fr/data',
+	API_URL: 'http://prod-rando-fr.makina-corpus.net/data',
+	DEFAULT_LANGUAGE: 'fr',
 
 	CONNECTED_REDIRECTION: 'root.treks_list',
 	DISCONNECTED_REDIRECTION: 'root.treks_list',

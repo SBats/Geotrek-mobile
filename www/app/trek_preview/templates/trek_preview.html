@@ -27,16 +27,13 @@ Préview du trek
 		<p ng-bind-html="trek.properties.description"></p>
 
 		<br \>
-		<p>Pour avoir accès au reste des informations du trek ainsi qu'à sa carte détaillé, il est nécessaire de le télécharger. Il est aussi possible de le mettre en favori pour le retrouver plus facilement par la suite sans pour autant le télécharger</p>
-
-		<button class="float_left button detailed_view_buttons ion-star {{ isFavorite ? 'is_favorite' : '' }}" id="favorite_btn" ng-click="addToFavorites()"></button>
+		<p>Pour avoir accès au reste des informations du trek ainsi qu'à sa carte détaillé, il est nécessaire de le télécharger.</p>
 
 		<div id="download_btn_container" class="float_left">
 			<div id="download_btn" class="detailed_view_buttons {{ downloadButton }}" ng-click="downloadTrek()">
 				<p>Télécharger le trek</p>
 			</div>
 			<div id="loading_bar" class="{{ loadingBar }}">
-				<!-- <p>{{ currentDownload }}</p> -->
 			</div>
 		</div>
 
