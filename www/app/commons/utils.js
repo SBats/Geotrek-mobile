@@ -99,7 +99,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 			console.log('Download starting');
 			$cordovaFileTransfer.download(url, filepath + '/' + fileName)
 			.then(function (success) {
-				window.localStorage['globalZipLastUpdate'] = Date();
+				window.localStorage[filepath + fileName] = Date();
 				deferred.resolve(constants.FILE_DOWNLOADED);
 			},
 			function (error) { deferred.reject(error); },
@@ -116,7 +116,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 				console.log('File already there');
 				// If the file is already on the device, we check if we need to update it
-				var lastModifiedDate = new Date(window.localStorage['globalxZipLastUpdate']);
+				var lastModifiedDate = new Date(window.localStorage[filepath + fileName]);
 				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
 
 				console.log(url);

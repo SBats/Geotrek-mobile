@@ -1,43 +1,75 @@
 <ion-view>
-   <ion-content overflow-scroll="false">
-   	<ion-list>
+	<ion-content overflow-scroll="false">
+		<ion-list>
 
 
-         <div class="item item-divider">
-            Langues
-         </div>
-   		<ion-item>
-   			<p class="float_left">Langue de l'interface :</p>
-   			<select class="float_right" ng-model="interfaceLang" ng-change="changeInterfaceLang(interfaceLang)">
-   				<option value="fr">Français</option>
-   				<option value="en">English</option>
-   			</select>
-   		</ion-item>
-   		<ion-item>
-   			<p class="float_left">Langue des treks : </p>
-   			<select class="float_right" ng-model="treksLang" ng-change="changeTreksLang(treksLang)">
-   				<option value="fr">Français</option>
-   				<option value="en">English</option>
-   			</select>
-   		</ion-item>
+			<div class="item item-divider">
+				Langues
+			</div>
+			<ion-item>
+				<p class="float_left">Langue de l'interface :</p>
+				<select class="float_right" ng-model="interfaceLang" ng-change="changeInterfaceLang(interfaceLang)">
+					<option value="fr">Français</option>
+					<option value="en">English</option>
+				</select>
+			</ion-item>
+			<ion-item>
+				<p class="float_left">Langue des treks : </p>
+				<select class="float_right" ng-model="treksLang" ng-change="changeTreksLang(treksLang)">
+					<option value="fr">Français</option>
+					<option value="en">English</option>
+				</select>
+			</ion-item>
 
-          <div class="item item-divider">
-            Réseau
-         </div>
-         <ion-item>
-            <p class="float_left">Connexion internet :</p>
-            <p class="float_right">{{ isConnected ? 'Oui' : 'Non' }}</p>
-         </ion-item>
-         <ion-item>
-            <p class="float_left">Mode de synchronisation :</p>
-            <select class="float_right" ng-model="syncMode" ng-change="changeSyncMode(syncMode)">
-               <option value="all">Wifi, 3G/4G</option>
-               <option value="wifi">Wifi only</option>
-            </select>
-         </ion-item>
+			 <div class="item item-divider">
+				Réseau
+			</div>
+			<ion-item>
+				<p class="float_left">Connexion internet :</p>
+				<p class="float_right">{{ isConnected ? 'Oui' : 'Non' }}</p>
+			</ion-item>
+			<ion-item>
+				<p class="float_left">Mode de synchronisation :</p>
+				<select class="float_right" ng-model="syncMode" ng-change="changeSyncMode(syncMode)">
+					<option value="all">Wifi, 3G/4G</option>
+					<option value="wifi">Wifi only</option>
+				</select>
+			</ion-item>
+
+			<div class="item item-divider">
+				Carte
+			</div>
+			<ion-item>
+				<p class="float_left">Alertes PdI (GPS Uniquement) :</p>
+				<label class="float_left toggle toggle-royal pull-right">
+					<input type="checkbox" ng-model="poiAlert" >
+					<div class="track">
+						<div class="handle"></div>
+					</div>
+				</label>
+			</ion-item>
+
+			<div class="item item-divider">
+				Données
+			</div>
+			<ion-item>
+				<p class="float_left">Nettoyer les données téléchargées :</p>
+				<button class="float_right" ng-click="cleanData">
+					Supprimer
+				</button>
+			</ion-item>
+
+			<div class="item item-divider">
+				Quitter
+			</div>
+			<ion-item>
+				<p class="float_left">Quitter l'application :</p>
+				<button class="float_right">
+					Quitter
+				</button>
+			</ion-item>
 
 
-
-   	</ion-list>
+		</ion-list>
 	</ion-content>
 </ion-view>

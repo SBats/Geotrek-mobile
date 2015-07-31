@@ -1,6 +1,6 @@
 'use strict';
 
-function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, constants, settings, utils, FiltersFactory, LanguageService, InitService) {
+function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksService) {
 
 	function clearAndReload() {
 		$ionicHistory.clearCache();
@@ -64,6 +64,29 @@ function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, cons
 	$scope.syncMode = window.localStorage.syncMode;
 	$scope.changeSyncMode = function (mode) {
 		window.localStorage.syncMode = mode;
+	};
+
+	$scope.cleanData = function () {
+		var promises = [];
+
+		$ionicPopup.confirm({
+			title: 'Supprimer les données',
+			template: 'Etes vous sur de vouloir supprimer les données téléchargées ?'
+		}).then(function (res) {
+
+			if (res) {						
+				TreksService.getDownloadedTreks().then(function (res) {
+					angular.forEach(treks, function (trek) {
+						promises.push(TreksService.deleteTrek(trek.id));
+					});
+					$q.all(promises).then(function (res) {
+						$ionicPopup.alert({
+							template: 'Langue changée'
+						})
+					});
+				});
+			}
+		});
 	};
 }
 
