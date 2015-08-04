@@ -9,11 +9,18 @@ var settingsConstants = {
 	DISCONNECTED_REDIRECTION: 'root.treks_list',
 
 
+	// CONSTANTS //
+	//
+	//
+
 	FILE_DOWNLOADED: 1,
 	FILE_ALREADY_THERE: 2,
 
 	TREK_DOWNLOADED: 1,
 	TREK_DELETED: 2,
+
+	FORCE_DOWNLOAD: false,
+
 
 	// PATHS AND DIRECTORY //
 	//
@@ -56,11 +63,7 @@ var settingsConstants = {
 
 		GLOBAL_MAP_ATTRIBUTION: '(c) IGN Geoportail',
 		TREK_COLOR: '#F89406'
-	},
-
-
-
-	FORCE_DOWNLOAD: false
+	}
 };
 
 module.exports = {
