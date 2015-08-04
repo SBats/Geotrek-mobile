@@ -32,19 +32,24 @@
     "angular-translate": "./node_modules/angular-translate/dist/angular-translate.js"
   },
   "cordovaPlugins": [
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-file",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-zip",
+    "cordova-plugin-network-information",
+    "cordova-plugin-geolocation",
     "org.apache.cordova.device",
     "org.apache.cordova.console",
     "com.ionic.keyboard",
-    "cordova-plugin-file",
-    "cordova-plugin-file-transfer",
-    "org.apache.cordova.file",
-    "org.apache.cordova.file-transfer",
-    "cordova-plugin-zip",
-    "cordova-plugin-network-information",
     "cordova-plugin-globalization",
     "cordova-plugin-splashscreen"
   ],
   "cordovaPlatforms": [
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "4.0.0",
+      "locator": "android"
+    }
   ]
 }
