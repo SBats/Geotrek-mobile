@@ -33,16 +33,7 @@
   },
   "cordovaPlugins": [
     "cordova-plugin-file-transfer",
-    "cordova-plugin-file",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-zip",
-    "cordova-plugin-network-information",
-    "cordova-plugin-geolocation",
-    "org.apache.cordova.device",
-    "org.apache.cordova.console",
-    "com.ionic.keyboard",
-    "cordova-plugin-globalization",
-    "cordova-plugin-splashscreen"
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "android",
