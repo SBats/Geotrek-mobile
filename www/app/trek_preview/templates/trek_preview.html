@@ -1,44 +1,45 @@
 <ion-view>
-<ion-nav-title>
-Préview du trek
-</ion-nav-title>
+	<ion-nav-title>
+		{{ 'trek_preview.title' | translate }}
+	</ion-nav-title>
 
-<ion-content overflow-scroll="false">
-<div class="center_div_wrapper">
-	<div class="center_div">
+	<ion-content overflow-scroll="false">
 
-		<div class="detailed_trek_header">
-			<h1>{{ trek.properties.name }}</h1>
-			<div class="float_left">
-				<img ng-src="{{ trek.properties.thumbnail }}" \>
-			</div>
-			<div class="float_left">
-				<img class="picto" ng-src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
-				<img class="picto" ng-src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
-				<i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
+		<div class="center_div_wrapper">
+			<div class="center_div">
+
+				<div class="detailed_trek_header">
+					<h1>{{ trek.properties.name }}</h1>
+					<div class="float_left">
+						<img ng-src="{{ trek.properties.thumbnail }}" \>
+					</div>
+					<div class="float_left">
+						<img class="picto" ng-src="{{ trek.properties.difficulty.pictogram }}" \> {{ trek.properties.difficulty.label }}
+						<img class="picto" ng-src="{{ trek.properties.practice.pictogram }}" \> {{ trek.properties.practice.label }}
+						<i class="picto icon ion-clock"></i> {{ trek.properties.duration_pretty }}
+						<br \>
+						<img class="picto" ng-src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
+						<i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
+					</div>
+				</div>
+
+				<p ng-bind-html="trek.properties.description_teaser"></p>
+				<p ng-bind-html="trek.properties.ambiance"></p>
+				<p ng-bind-html="trek.properties.description"></p>
+
 				<br \>
-				<img class="picto" ng-src="{{ trek.properties.route.pictogram }}" \> {{ trek.properties.route.label }}, {{ trek.properties.length / 1000 | number : 2 }}km
-				<i class="picto ion-arrow-graph-up-right"></i> {{ trek.properties.ascent }}m
+				<p>{{ 'trek_preview.info' | translate }}</p>
+
+				<div id="download_btn_container" class="float_left">
+					<div id="download_btn" class="detailed_view_buttons {{ downloadButton }}" ng-click="downloadTrek()">
+						<p>{{ 'trek_preview.download' | translate }}</p>
+					</div>
+					<div id="loading_bar" class="{{ loadingBar }}">
+					</div>
+				</div>
+
 			</div>
 		</div>
 
-		<p ng-bind-html="trek.properties.description_teaser"></p>
-		<p ng-bind-html="trek.properties.ambiance"></p>
-		<p ng-bind-html="trek.properties.description"></p>
-
-		<br \>
-		<p>Pour avoir accès au reste des informations du trek ainsi qu'à sa carte détaillé, il est nécessaire de le télécharger.</p>
-
-		<div id="download_btn_container" class="float_left">
-			<div id="download_btn" class="detailed_view_buttons {{ downloadButton }}" ng-click="downloadTrek()">
-				<p>Télécharger le trek</p>
-			</div>
-			<div id="loading_bar" class="{{ loadingBar }}">
-			</div>
-		</div>
-
-	</div>
-</div>
-
-</ion-content>
+	</ion-content>
 </ion-view>

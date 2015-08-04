@@ -10,7 +10,7 @@
 			</ion-nav-buttons>
 		</ion-nav-bar>
 		<div id="disconnected_notification" class="{{ hide ? 'hide' : '' }}">
-			Vous êtes actuellement hors-connexion. Les fonds de cartes et les images des randonnées non téléchargées ne pourront pas être affichés.
+			{{ 'layout.disconnected' | translate }}
 			<i class="icon ion-close-round" ng-click="closeNotif()"></i>
 		</div>
 		<ion-nav-view name="content"></ion-nav-view>
@@ -23,19 +23,19 @@
 		<ion-content>
 			<ion-list>
 				<ion-item nav-clear menu-close href="#/treks">
-					Randonnées
+					{{ 'layout.treks' | translate }}
 				</ion-item>
 				<ion-item nav-clear menu-close href="#/map">
-					Carte
+					{{ 'layout.map' | translate }}
 				</ion-item>
 				<ion-item nav-clear menu-close href="#/favorites">
-					Mes randos
+					{{ 'layout.favorites' | translate }}
 				</ion-item>
 				<ion-item nav-clear menu-close href="#/flat_pages">
-					Pages statiques
+					{{ 'layout.flat_pages' | translate }}
 				</ion-item>
 				<ion-item nav-clear menu-close href="#/settings">
-					Paramètres
+					{{ 'layout.settings' | translate }}
 				</ion-item>
 			</ion-list>
 		</ion-content>

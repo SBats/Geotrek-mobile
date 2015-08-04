@@ -1,20 +1,25 @@
 <ion-view>
+
+	<ion-nav-title>
+		{{ 'user_settings.title' | translate }}
+	</ion-nav-title>
+
 	<ion-content overflow-scroll="false">
 		<ion-list>
 
 
 			<div class="item item-divider">
-				Langues
+				{{ 'user_settings.language' | translate }}
 			</div>
 			<ion-item>
-				<p class="float_left">Langue de l'interface :</p>
+				<p class="float_left">{{ 'user_settings.interface_language' | translate }} :</p>
 				<select class="float_right" ng-model="interfaceLang" ng-change="changeInterfaceLang(interfaceLang)">
 					<option value="fr">Français</option>
 					<option value="en">English</option>
 				</select>
 			</ion-item>
 			<ion-item>
-				<p class="float_left">Langue des treks : </p>
+				<p class="float_left">{{ 'user_settings.treks_language' | translate }} : </p>
 				<select class="float_right" ng-model="treksLang" ng-change="changeTreksLang(treksLang)">
 					<option value="fr">Français</option>
 					<option value="en">English</option>
@@ -22,14 +27,14 @@
 			</ion-item>
 
 			 <div class="item item-divider">
-				Réseau
+				{{ 'user_settings.network' | translate }}
 			</div>
 			<ion-item>
-				<p class="float_left">Connexion internet :</p>
-				<p class="float_right">{{ isConnected ? 'Oui' : 'Non' }}</p>
+				<p class="float_left">{{ 'user_settings.connection' | translate }} :</p>
+				<p class="float_right">{{ isConnected ? ('Yes' | translate) : ('No' | translate) }}</p>
 			</ion-item>
 			<ion-item>
-				<p class="float_left">Mode de synchronisation :</p>
+				<p class="float_left">{{ 'user_settings.sync_mode' | translate }} :</p>
 				<select class="float_right" ng-model="syncMode" ng-change="changeSyncMode(syncMode)">
 					<option value="all">Wifi, 3G/4G</option>
 					<option value="wifi">Wifi only</option>
@@ -37,10 +42,10 @@
 			</ion-item>
 
 			<div class="item item-divider">
-				Carte
+				{{ 'user_settings.map' | translate }}
 			</div>
 			<ion-item>
-				<p class="float_left">Alertes PdI (GPS Uniquement) :</p>
+				<p class="float_left">{{ 'user_settings.alerts' | translate }} :</p>
 				<label class="float_left toggle toggle-royal pull-right">
 					<input type="checkbox" ng-model="poiAlert" >
 					<div class="track">
@@ -50,22 +55,22 @@
 			</ion-item>
 
 			<div class="item item-divider">
-				Données
+				{{ 'user_settings.data' | translate }}
 			</div>
 			<ion-item>
-				<p class="float_left">Nettoyer les données téléchargées :</p>
+				<p class="float_left">{{ 'user_settings.clean_data' | translate }} :</p>
 				<button class="float_right" ng-click="cleanData">
-					Supprimer
+					{{ 'user_settings.delete' | translate }}
 				</button>
 			</ion-item>
 
 			<div class="item item-divider">
-				Quitter
+				{{ 'user_settings.leave' | translate }}
 			</div>
 			<ion-item>
-				<p class="float_left">Quitter l'application :</p>
+				<p class="float_left">{{ 'user_settings.leave_app' | translate }} :</p>
 				<button class="float_right">
-					Quitter
+					{{ 'user_settings.leave' | translate }}
 				</button>
 			</ion-item>
 
