@@ -25,3 +25,6 @@ See https://gist.github.com/isaacs/579814 depending on your environment.
 
 ### Generate compiled files
 `gulp`
+
+### Generate resources
+`ionic resources`
