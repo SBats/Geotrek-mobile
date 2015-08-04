@@ -1,4 +1,9 @@
-resources/
+!.gitignore
+
+resources/*
+!resources/icon.png
+!resources/splash.png
+
 platforms/
 plugins/
 node_modules/
