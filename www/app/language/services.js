@@ -12,6 +12,9 @@ function languageService($q, $cordovaGlobalization, $translate, constants, setti
 		window.localStorage.treksLang = lang;
 	};
 
+	/**
+	 * Gets the navigator or device language
+	 */
 	this.detectLang = function() {
 		var deferred = $q.defer();
 		var lang;
@@ -63,6 +66,9 @@ function languageService($q, $cordovaGlobalization, $translate, constants, setti
 		return (deferred.promise);
 	};
 
+	/**
+	 * Change the paths where to find the differents files.
+	 */
 	this.applyTreksLang = function() {
 		var deferred = $q.defer();
 

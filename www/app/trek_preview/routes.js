@@ -18,6 +18,20 @@ function trekPreviewRoutes($stateProvider) {
 				controller: controllers.trekPreviewController
 			}
 		}
+	})
+
+	.state('root.check_trek', {
+		url: "/check-trek-:trekId",
+		resolve: {
+			isTrekDownloaded: function(TreksService, $stateParams) {
+				return (TreksService.isTrekDownloaded($stateParams.trekId));
+			}
+		},
+		views: {
+			'content': {
+				controller: controllers.checkTrekController
+			}
+		}
 	});
 }
 

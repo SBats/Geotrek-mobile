@@ -10,6 +10,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 	});
 	var self = this;
 
+	/**
+	 * Gets the absolute URLs for the given trek
+	 */
 	this.replaceImgURLs = function(trek) {
 
 		trek.properties.thumbnail = utils.getAbsoluteUrl(trek.properties.thumbnail);
@@ -26,6 +29,11 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		});
 	};
 
+	/**
+	 * Resolves the list of treks
+	 *
+	 * @param {bool} forceUpdate - if set to true, the function will update the treks, even if already saved
+	 */
 	this.getTreks = function (forceUpdate) {
 		var deferred = $q.defer();
 		var promises = [];
@@ -59,7 +67,10 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
-	this.getDownloadedTreks = function (trekId) {
+	/**
+	 * Resolves an array containing the downloaded treks
+	 */
+	this.getDownloadedTreks = function () {
 		var deferred = $q.defer();
 
 		self.getTreks().then(function (treks) {
@@ -75,6 +86,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	/**
+	 * Resolves the trek corresponding to the given Id
+	 */
 	this.getTrek = function (trekId) {
 		var deferred = $q.defer();
 
@@ -89,6 +103,11 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	/**
+	 * Changes the value of 'isDownloaded' for the given trek
+	 *
+	 * @param {bool} value - New value of 'isDownloaded'
+	 */
 	this.setDownloadedValue = function(trekId, value) {
 
 		this.getTreks().then(function (treks) {
@@ -100,6 +119,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		});
 	};
 
+	/**
+	 * Downloads the specific files of the trek given in parameter
+	 */
 	this.downloadTrek = function (trekId) {
 
 		var deferred = $q.defer();
@@ -125,6 +147,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	/**
+	 * Deletes the specific files of the trek given in parameter
+	 */
 	this.deleteTrek = function (trekId) {
 
 		var deferred = $q.defer();
@@ -146,6 +171,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		return (deferred.promise);
 	};
 
+	/**
+	 * Resolves wether or not a trek is downloaded
+	 */
 	this.isTrekDownloaded = function (trekId) {
 		var deferred = $q.defer();
 

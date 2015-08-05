@@ -21,6 +21,9 @@ function poisService($resource, $q, constants, settings, utils) {
 	this.pois = {};
 	this.poisForTreks = {};
 
+	/**
+	 * Returns an array containing the POIs for the given trek
+	 */
 	this.makePoisArray = function (trekId) {
 		var poisArray = [];
 
@@ -30,7 +33,9 @@ function poisService($resource, $q, constants, settings, utils) {
 		return (poisArray);
 	};
 
-	// Formats and save a poi
+	/**
+	 * Formats and save a poi
+	 */
 	this.savePoi = function (poi, trekId) {
 		poi.properties.thumbnail = utils.getAbsoluteUrl(poi.properties.thumbnail);
 		poi.properties.type.pictogram = utils.getAbsoluteUrl(poi.properties.type.pictogram);
@@ -40,11 +45,11 @@ function poisService($resource, $q, constants, settings, utils) {
 		self.pois[poi.id] = poi;
 	};
 
+	/**
+	 * Gets the POIs of the given trek
+	 */
 	this.getTrekPois = function (trekId) {
 		var deferred = $q.defer();
-
-		if (!self.poisForTreks[trekId]) {
-		}
 
 		self.trekPoisResource.query({ trekId: trekId }).$promise
 		.then(function (file) {
@@ -62,7 +67,9 @@ function poisService($resource, $q, constants, settings, utils) {
 		return (deferred.promise);
 	};
 
-	// Returns the poi corresponding to the given id
+	/**
+	 * Returns the poi corresponding to the given id
+	 */
 	this.getPoi = function (poiId, trekId) {
 		var deferred = $q.defer();
 

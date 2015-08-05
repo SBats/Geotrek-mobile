@@ -2,7 +2,9 @@
 
 function filtersFactory($q, TreksService) {
 
-	//Filters initialization, durations are always the same, difficulies and practices are set in getFilters()
+	/**
+	 * Filters initialization, durations are always the same, difficulies and practices are set in getFilters()
+	 */
 	var filters = {
 		difficulties: {},
 		durations: {
@@ -26,7 +28,11 @@ function filtersFactory($q, TreksService) {
 		});
 	};
 
-	//Gets the difficulties and practices filters by searching the treks
+	/**
+	 * Gets the difficulties and practices filters by searching the treks
+	 *
+	 * @param {bool} forceUpdate - if set to true, the function will update the filters, even if already saved
+	 */
 	var getFilters = function (forceUpdate) {
 		var	deferred = $q.defer();
 
@@ -60,7 +66,9 @@ function filtersFactory($q, TreksService) {
 		return (deferred.promise);
 	};
 
-	//Checks if all the options on the filter are false. If they are, it acts like they are all on true
+	/**
+	 * Checks if all the options on the filter are false. If they are, it acts like they are all on true
+	 */
 	var checkAllFalse = function (filter) {
 		var allFalse = true;
 
@@ -70,8 +78,10 @@ function filtersFactory($q, TreksService) {
 		return (allFalse);
 	};
 
-	//Checking functions for all the filters.
-	//If an information is missing on a trek, it is considered
+	/**
+	 * Checking functions for all the filters.
+	 * If an information is missing on a trek, it is considered
+	 */
 	var checkDifficulty = function (trek) {
 		return (checkAllFalse(filters.difficulties)
 			|| !trek.properties.difficulty
@@ -93,7 +103,9 @@ function filtersFactory($q, TreksService) {
 			|| filters.practices[trek.properties.practice.label].isActive);
 	};
 
-	//Gets the treks after applying the filters
+	/**
+	 * Return the treks corresponding to the selected filters
+	 */
 	var getFilteredTreks = function () {
 		var filteredTreks = [];
 		var	deferred = $q.defer();

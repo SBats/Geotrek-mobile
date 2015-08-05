@@ -39,6 +39,12 @@ function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek,
 	$scope.trek = trek;
 }
 
+function checkTrekController($state, $stateParams, isTrekDownloaded) {
+
+	$state.go(isTrekDownloaded ? 'root.detailed_trek' : 'root.trek_preview', { trekId : $stateParams.trekId });
+}
+
 module.exports = {
-	trekPreviewController: trekPreviewController
+	trekPreviewController: trekPreviewController,
+	checkTrekController: checkTrekController
 };

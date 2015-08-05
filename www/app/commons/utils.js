@@ -4,16 +4,23 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 	var self = this;
 
+	/** 
+	 * Returns an absolute URL from a relative URL
+	 *
+	 * @param {string} relativeUrl - The relative URL usually found in a var from treks.geojson
+	 * @param {number} trekId - Optionnal, needed in case you are looking for a specific trek picture
+	 * @param {bool} isTrekDownloaded - Needed in case trekId is specified
+	 */
 	this.getAbsoluteUrl = function (relativeUrl, trekId, isTrekDownloaded) {
 		// If we are on a device and the resource is in the global files
 		if (settings.isDevice && angular.isUndefined(trekId)) {
 			return (settings.treksDir + '/' + constants.GLOBAL_DIR + relativeUrl);
 		}
-		// If we are connected on brower or we are browing a trek page on a device
+		// If we are connected on browser or we are browsing a trek page on a device
 		else if (settings.isConnected) {
 			return (settings.apiUrl + relativeUrl);
 		}
-		// If we are browing a trek page on a device in disconnected mode
+		// If we are browsing a trek page on a device in disconnected mode
 		else  if (angular.isDefined(trekId) && isTrekDownloaded) {
 			return (settings.treksDir + '/' + trekId + relativeUrl);
 		}
@@ -23,6 +30,11 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		}
 	};
 
+	/** 
+	 * Returns the starting point of a geometry element
+	 *
+	 * @param element - The element of which you want to get the starting point
+	 */
 	this.getStartPoint = function (element) {
 		var firstPointCoordinates = [];
 
@@ -40,6 +52,11 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		});
 	};
 
+	/** 
+	 * Returns the ending point of a geometry element
+	 *
+	 * @param element - The element of which you want to get the ending point
+	 */
 	this.getEndPoint = function (element) {
 		var lastPointCoordinates = [];
 		
@@ -60,7 +77,11 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		});
 	};
 
-	// Returns a marker with the coordinates and the icon for the trek given in parameter
+	/** 
+	 * Returns a marker with the coordinates and the icon for the trek given in parameter
+	 *
+	 * @param {object} trek
+	 */
 	this.getMarkerFromTrek = function (trek) {
 		var coord;
 		var marker;
@@ -70,7 +91,11 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		return (marker);
 	};
 
-	// Returns a marker with the coordinates and the icon for the poi given in parameter
+	/** 
+	 * Returns a marker with the coordinates and the icon for the poi given in parameter
+	 *
+	 * @param {object} poi
+	 */
 	this.getMarkerFromPoi = function (poi) {
 		var coord;
 		var marker;
@@ -80,6 +105,14 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		return (marker);
 	};
 
+	/** 
+	 * Downloads a file
+	 *
+	 * @param {string} url - URL of the file to download
+	 * @param {string} filepath - path where to save the file
+	 * @param {string} fileName - name under which to save the file
+	 * @param {string} forceDownload - downloads even if the file is already there
+	 */
 	this.downloadFile = function(url, filepath, fileName, forceDownload) {
 
 		var deferred = $q.defer();
@@ -89,10 +122,6 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		if (angular.isUndefined(forceDownload)) {
 			forceDownload = settings.forceDownload;
 		}
-
-		// if ($cordovaNetwork.getNetword !== 'wifi' && window.localStorage.syndMode === 'wifi') {
-		// 	deferred.reject('wifionly');
-		// }
 
 		function onDownloadNeeded() {
 
@@ -115,6 +144,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 			.then(function (success) {
 
 				console.log('File already there');
+
 				// If the file is already on the device, we check if we need to update it
 				var lastModifiedDate = new Date(window.localStorage[filepath + fileName]);
 				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
@@ -124,6 +154,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 				.then(function (success) {
 					console.log('Update needed');
 					console.log(filepath);
+
 					// In case of answer 200, we remove the existing files, then download the file to update it
 					$cordovaFile.removeFile(filepath + '/', fileName)
 					.then(onDownloadNeeded, function (error) {
@@ -132,6 +163,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 				},
 				function (response) {
 					console.log('Update not needed');
+
 					// In case of answer 304, the file is up to date, no need to download
 					deferred.resolve(constants.FILE_ALREADY_THERE);
 				});
@@ -146,6 +178,12 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		return (deferred.promise);
 	};
 
+	/** 
+	 * Unzip a file
+	 *
+	 * @param {string} zipLocalPath - path of the zip file
+	 * @param {string} toPath - path where to unzip the file
+	 */
 	this.unzip = function (zipLocalPath, toPath) {
 
 		var deferred = $q.defer();
@@ -160,6 +198,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 				deferred.reject("unzip failed");
 			}
 		}, function(eventProgress) {
+
 			// eventProgress is a dict with 2 keys : loaded and total
 			deferred.notify(eventProgress);
 		});
@@ -167,6 +206,14 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		return (deferred.promise);
 	};
 
+	/** 
+	 * Downloads and unzip a file
+	 *
+	 * @param {string} url - URL of the file to download
+	 * @param {string} filepath - path where to save the file
+	 * @param {string} fileName - name under which to save the file
+	 * @param {string} forceDownload - downloads even if the file is already there
+	 */
 	this.downloadAndUnzip = function (url, filepath, fileName, forceDownload) {
 		var deferred = $q.defer();
 

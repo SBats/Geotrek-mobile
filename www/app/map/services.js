@@ -10,6 +10,12 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 	self.bounds = {};
 	self.tileLayers = {};
 
+	/**
+	 * Initializes the map with the given settings
+	 *
+	 * @param {object} defaultMapSettings - Contains the zoom lvl, default coords
+	 * @param {object} coord - Optionnal, if it is specified, it will replace the default coords
+	 */
 	this.makeMap = function (defaultMapSettings, coord) {
 		var center = coord ? coord : [defaultMapSettings.LATITUDE, defaultMapSettings.LONGITUDE];
 
@@ -24,25 +30,28 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
+	/**
+	 * Stops following
+	 */
 	this.stopWatch = function () {
 		if (angular.isDefined(watchPosition)) {
 			watchPosition.clearWatch();
 		}
 	};
 
+	/**
+	 * Centers the map on the user and puts a marker on his position
+	 */
 	this.centerOnUser = function () {
 		$cordovaGeolocation.getCurrentPosition().then(function (location) {
 
-			console.log('Centering');
 			self.map.setView([location.coords.latitude, location.coords.longitude]);
 			if (!self.map.hasLayer(userLocationMarker)) {
 				if (userLocationMarker) {
-					console.log('Marker created');
 					userLocationMarker.setLatLng([location.coords.latitude, location.coords.longitude]);
 					userLocationMarker.addTo(self.map);
 				}
 				else {
-					console.log('Marker not created');
 					userLocationMarker = L.marker([location.coords.latitude, location.coords.longitude], {
 						icon: IconsService.getUserLocationIcon()
 					});
@@ -52,6 +61,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
+	/**
+	 * Centers the map on the user, and starts following him
+	 */
 	this.followUser = function () {
 		var watchOptions = {
 			frequency : 200,
@@ -66,8 +78,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
-
-	// Remove all custom layers on the map
+	/**
+	 * Remove all custom layers on the map
+	 */
 	this.clearMapLayers = function () {
 		angular.forEach(self.trekLayers, function (value, key) {
 			if (self.map.hasLayer(value)) {
@@ -76,7 +89,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
-	// Takes a marker coords, compares them to bounds et changes bounds if needed
+	/**
+	 * Takes a marker coords, compares them to bounds et changes bounds if needed
+	 */
 	this.compareBounds = function(bounds, coords) {
 		if (bounds.length === 0) {
 			bounds = [[coords.lat, coords.lng], [coords.lat, coords.lng]];
@@ -90,7 +105,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		return (bounds);
 	};
 
-	// Enlarge the bounds by the given value
+	/**
+	 * Enlarge the bounds by the given value
+	 */
 	this.enlargeBounds = function(bounds, value) {
 		bounds[0][0] = bounds[0][0] - value;
 		bounds[0][1] = bounds[0][1] - value;
@@ -99,7 +116,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		return (bounds);
 	};
 
-	// Sets markers on each trek's starting point, creates the global bounds
+	/**
+	 * Sets markers on each trek's starting point, creates the global bounds
+	 */
 	this.makeTreksLayer = function () {
 		var marker;
 
@@ -114,7 +133,7 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 
 				marker = utils.getMarkerFromTrek(trek);
 				marker.on('click', function () {
-					$state.go('root.map.detailed', { trekId: trek.id });
+					$state.go(trek.isDownloaded ? 'root.map.detailed' : 'root.trek_preview', { trekId: trek.id });
 				});
 				self.trekLayers['global'].addLayer(marker);
 
@@ -125,7 +144,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
-	// Sets the defaut position and zoom level when the view is global
+	/**
+	 * Sets the defaut position and zoom level when the view is global
+	 */
 	this.setGlobalSettings = function () {
 		var mapContainer = document.getElementById('map').innerHTML;
 		var coord = { lat: constants.leaflet.global.LATITUDE, lng: constants.leaflet.global.LONGITUDE };
@@ -149,7 +170,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		self.map.addLayer(self.trekLayers['global']);
 	};
 
-	// Makes the POI markers
+	/**
+	 * Makes the POI markers
+	 */
 	this.makePois = function (trek) {
 		var marker;
 		var poisLayer;
@@ -171,7 +194,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 	};
 
-	// Makes the trek's route and infos
+	/**
+	 * Makes the trek's route and infos
+	 */
 	this.makeTrek = function (trek) {
 		var marker = utils.getMarkerFromTrek(trek);
 		var route = L.geoJson();
@@ -190,6 +215,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		}
 	};
 
+	/**
+	 * Adds the tiles of the given trek to the map
+	 */
 	this.addTrekTileLayer = function (trekId) {
 		if (angular.isUndefined(self.tileLayers[trekId])) {
 			self.tileLayers[trekId] = L.tileLayer(settings.tilesDir + '/' + trekId + '/{z}/{x}/{y}.png');
@@ -199,7 +227,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		}
 	};
 
-	// Centers the map on the trek and zooms on it
+	/**
+	 * Centers the map on the trek and zooms on it
+	 */
 	this.setDetailedSettings = function (trek) {
 		var coord = utils.getStartPoint(trek);
 		var mapContainer = document.getElementById('map').innerHTML;
@@ -225,7 +255,9 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		self.map.addLayer(self.trekLayers[trek.id]);
 	};
 
-	// Centers on the given POI
+	/**
+	 * Centers on the given POI
+	 */
 	this.setPoiSettings = function (poi, trek) {
 		var coord = utils.getStartPoint(poi);
 		var mapContainer = document.getElementById('map').innerHTML;

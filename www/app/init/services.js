@@ -2,6 +2,9 @@
 
 function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, constants, utils, LanguageService, TreksService) {
 
+	/**
+	 * Check for updates for each downloaded trek's specific files
+	 */
 	function updateTreks() {
 		var deferred = $q.defer();
 		var promises = [];
@@ -19,6 +22,9 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 		return (deferred.promise);
 	}
 
+	/**
+	 * Downloads global treks and tiles files. Initializes languague.
+	 */
 	this.getDeviceFiles = function () {
 		var deferred = $q.defer();
 
@@ -39,6 +45,7 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 				else {
 
 					if ($cordovaNetwork.getNetwork === 'wifi' || window.localStorage.syncMode === 'all') {
+
 						// Downloads the .zip containing the main geojson and the tiles
 						deferred.notify('Loading treks');
 						utils.downloadAndUnzip(settings.globalTrekZipUrl, settings.treksDir + '/' + constants.GLOBAL_DIR, constants.GLOBAL_ZIP)
@@ -59,6 +66,9 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 						}, function (error) {
 							console.log(error);
 						});
+					}
+					else {
+						deferred.resolve(constants.CONNECTED_REDIRECTION);
 					}
 				}
 			});
