@@ -8,6 +8,8 @@ var settingsConstants = {
 	CONNECTED_REDIRECTION: 'root.treks_list',
 	DISCONNECTED_REDIRECTION: 'root.treks_list',
 
+	POI_NOTIF_MAX_DIST: 1, // in km
+
 
 	// CONSTANTS //
 	//

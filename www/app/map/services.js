@@ -1,9 +1,11 @@
 'use strict';
 
-function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService) {
+function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService, NotificationService) {
 
 	var userLocationMarker = null;
 	var watchPosition;
+	var followUser = false;
+	var notifiedPois = [];
 	var self = this;
 
 	self.trekLayers = {};
@@ -34,9 +36,7 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 	 * Stops following
 	 */
 	this.stopWatch = function () {
-		if (angular.isDefined(watchPosition)) {
-			watchPosition.clearWatch();
-		}
+		followUser = false;
 	};
 
 	/**
@@ -62,20 +62,57 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 	};
 
 	/**
-	 * Centers the map on the user, and starts following him
+	 * Start watching the user position
 	 */
-	this.followUser = function () {
+	this.startWatchPosition = function () {
 		var watchOptions = {
-			frequency : 200,
+			frequency : 10000,
 			timeout : 3000,
 			enableHighAccuracy: false
 		};
 
-		self.centerOnUser();
-		watchPosition = $cordovaGeolocation.watchPosition(watchOptions).then(null, null, function (location) {
-			userLocationMarker.setLatLng([location.coords.latitude, location.coords.longitude]);
-			self.map.setView([location.coords.latitude, location.coords.longitude]);
+		watchPosition = $cordovaGeolocation.watchPosition(watchOptions);
+		watchPosition.then(null, null, function (location) {
+			if (followUser) {
+				userLocationMarker.setLatLng([location.coords.latitude, location.coords.longitude]);
+				self.map.setView([location.coords.latitude, location.coords.longitude]);
+			}
 		});
+		watchPosition.then(null, null, function (location) {
+			if (window.localStorage.alertOnPoi) {
+				TreksService.getDownloadedTreks().then(function (treks) {
+					PoisService.getDownloadedPois(treks).then(function (pois) {
+						console.log('coucou1');
+						angular.forEach(pois, function (poi) {
+
+							console.log('coucou2');
+							if (!(notifiedPois.indexOf(poi.properties.id) > -1)) {
+								var poiCoord = utils.getStartPoint(poi);
+								var dist = utils.getDistanceFromLatLonInKm(poiCoord.lat, poiCoord.lng, location.coords.latitude, location.coords.longitude);
+
+								console.log('Distance from ' + poi.properties.name + ' : ' + dist);
+								if (dist <= constants.POI_NOTIF_MAX_DIST) { 
+									notifiedPois.push(poi.properties.id);
+									NotificationService.poiNotification(poi);
+								}
+							}
+						});
+					});
+				});
+			}					
+		});
+	};
+
+	/**
+	 * Centers the map on the user, and starts following him
+	 */
+	this.followUser = function () {
+
+		followUser = true;
+		self.centerOnUser();
+		if (angular.isUndefined(watchPosition)) {
+			self.startWatchPosition();
+		}
 	};
 
 	/**

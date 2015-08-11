@@ -6,6 +6,9 @@ function initController($ionicHistory, $state, $scope, $translate, constants, se
 	if (angular.isUndefined(window.localStorage.syncMode)) {
 		window.localStorage.syncMode = 'all';
 	}
+	if (angular.isUndefined(window.localStorage.alertOnPoi)) {
+		window.localStorage.alertOnPoi = true;
+	}
 
 	if (settings.isDevice) {
 		InitService.getDeviceFiles().then(function (res) {

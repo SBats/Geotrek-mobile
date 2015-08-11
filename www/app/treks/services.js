@@ -1,6 +1,6 @@
 'use strict';
 
-function treksService($resource, $http, $q, $cordovaFile, constants, settings, utils) {
+function treksService($resource, $http, $q, $cordovaFile, constants, settings, utils, PoisService) {
 
 	var treksResource = $resource(settings.treksUrl, {}, {
 		query: {
@@ -120,6 +120,16 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 	};
 
 	/**
+	 *	Get the downloaded treks and calls the POI service function to update POIs
+	 */
+	function updateDownloadedPois() {
+
+		self.getDownloadedTreks().then(function (treks) {
+			PoisService.getDownloadedPois(treks, true);
+		});
+	}
+
+	/**
 	 * Downloads the specific files of the trek given in parameter
 	 */
 	this.downloadTrek = function (trekId) {
@@ -133,6 +143,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 			.then(function (success) {
 				self.setDownloadedValue(trekId, true);
 				deferred.resolve('ok');
+				updateDownloadedPois();
 			}, function (error) {
 				deferred.reject(error);
 			}, function (progress) {
@@ -161,6 +172,8 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 			.then(function (success) {
 				self.setDownloadedValue(trekId, false);
 				deferred.resolve('ok');
+				updateDownloadedPois();
+
 			}, function (error) {
 				deferred.reject(error);
 			});

@@ -2,8 +2,6 @@
 
 function detailedTrekController($ionicHistory, $state, $scope, $ionicSlideBoxDelegate, trek, pois, utils, constants, settings, TreksService) {
 
-	console.log(trek);
-
 	var tabs = $ionicSlideBoxDelegate.$getByHandle('detailed_trek_tabs');
 
 	$scope.switchToMap = function () {

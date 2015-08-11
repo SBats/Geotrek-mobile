@@ -66,6 +66,12 @@ function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, cons
 		window.localStorage.syncMode = mode;
 	};
 
+	$scope.poiAlert = window.localStorage.alertOnPoi;
+	$scope.changePoiAlert = function(value) {
+		console.log(value);
+		window.localStorage.alertOnPoi = value;
+	};
+
 	$scope.cleanData = function () {
 		var promises = [];
 

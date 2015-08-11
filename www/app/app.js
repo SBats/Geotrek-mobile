@@ -19,7 +19,8 @@ var dependencies = [
 'app.trek_preview',
 'app.detailed_trek',
 'app.flat_pages',
-'app.user_settings'
+'app.user_settings',
+'app.notification'
 ];
 
 
@@ -42,6 +43,7 @@ require('./trek_preview');
 require('./detailed_trek');
 require('./flat_pages');
 require('./user_settings');
+require('./notification');
 
 
 angularApp.run(function ($ionicPlatform, $cordovaNetwork) {

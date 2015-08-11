@@ -30,6 +30,31 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 		}
 	};
 
+	/**
+	 * Returns the distance between two points
+	 */
+	this.getDistanceFromLatLonInKm = function(lat1,lon1,lat2,lon2) {
+		var R = 6371; // Radius of the earth in km
+		var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+		var dLon = deg2rad(lon2 - lon1);
+
+		var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+				Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+				Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		var d = R * c; // Distance in km
+		
+		return (d);
+	};
+
+	/**
+	 * Converts an angle from deg to rad
+	 */
+	function deg2rad(deg) {
+        return (deg * (Math.PI / 180));
+    }
+
 	/** 
 	 * Returns the starting point of a geometry element
 	 *
@@ -125,7 +150,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 		function onDownloadNeeded() {
 
-			console.log('Download starting');
+			//console.log('Download starting');
 			$cordovaFileTransfer.download(url, filepath + '/' + fileName)
 			.then(function (success) {
 				window.localStorage[filepath + fileName] = Date();
@@ -139,21 +164,21 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 		if (forceDownload === false) {
 
-			console.log('Checking filesystem');
+			//console.log('Checking filesystem');
 			$cordovaFile.checkFile(settings.cdvRoot + '/' + relativePath + '/', fileName)
 			.then(function (success) {
 
-				console.log('File already there');
+				//console.log('File already there');
 
 				// If the file is already on the device, we check if we need to update it
 				var lastModifiedDate = new Date(window.localStorage[filepath + fileName]);
 				var config = { headers: { 'If-Modified-Since': lastModifiedDate.toUTCString() }	};
 
-				console.log(url);
+				//console.log(url);
 				$http.get(url, config)
 				.then(function (success) {
-					console.log('Update needed');
-					console.log(filepath);
+					//console.log('Update needed');
+					//console.log(filepath);
 
 					// In case of answer 200, we remove the existing files, then download the file to update it
 					$cordovaFile.removeFile(filepath + '/', fileName)
@@ -162,7 +187,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 					});
 				},
 				function (response) {
-					console.log('Update not needed');
+					//console.log('Update not needed');
 
 					// In case of answer 304, the file is up to date, no need to download
 					deferred.resolve(constants.FILE_ALREADY_THERE);
@@ -219,7 +244,7 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 		function onUnzipNeeded() {
 
-			console.log('Unziping ' + filepath + '/' + fileName + ' to ' + filepath);
+			//console.log('Unziping ' + filepath + '/' + fileName + ' to ' + filepath);
 			self.unzip(filepath + '/' + fileName, filepath)
 			.then(function (unzipRes) {	deferred.resolve('ok');	},
 				function (error) { deferred.reject(error); });
@@ -229,16 +254,16 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 			if (downloadRes === constants.FILE_DOWNLOADED) {
 
-				console.log('Download success');
+				//console.log('Download success');
 				onUnzipNeeded();
 			}
 			else {
-				console.log('Download not needed');
+				//console.log('Download not needed');
 				deferred.resolve('ok');
 			}
 		}
 
-		console.log('Downloading: ' + url + ' to: ' + filepath + ' with filename: ' + fileName);
+		//console.log('Downloading: ' + url + ' to: ' + filepath + ' with filename: ' + fileName);
 		self.downloadFile(url, filepath, fileName, forceDownload)
 		.then(onDownloadSuccess, function (error) {
 			deferred.reject(error);

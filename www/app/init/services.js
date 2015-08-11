@@ -1,6 +1,6 @@
 'use strict';
 
-function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, constants, utils, LanguageService, TreksService) {
+function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, constants, utils, LanguageService, TreksService, LeafletService) {
 
 	/**
 	 * Check for updates for each downloaded trek's specific files
@@ -36,7 +36,9 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 			LanguageService.applyTreksLang().then(function (res) {
 				LanguageService.applyInterfaceLang();
 
-				console.log($cordovaNetwork.getNetwork());
+				if (window.localStorage.alertOnPoi) {
+					LeafletService.startWatchPosition();
+				}
 				if ($cordovaNetwork.isOffline()) {
 					settings.isConnected = false;
 					settings.leafletBackgroundUrl = settings.tilesDir + '/' + constants.GLOBAL_DIR + '/{z}/{x}/{y}.png';

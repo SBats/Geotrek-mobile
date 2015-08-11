@@ -88,6 +88,7 @@ function languageService($q, $cordovaGlobalization, $translate, constants, setti
 
 				settings.treksDir = settings.cdvRoot + '/' + constants.TREKS_DIR;
 				settings.tilesDir = settings.cdvRoot + '/' + constants.TILES_DIR;
+				settings.trekDir = settings.cdvRoot + '/' + constants.TREKS_DIR + '/';
 
 				settings.filesUrl = settings.cdvRoot + '/' + constants.TREKS_DIR + '/' + constants.GLOBAL_DIR;
 			}

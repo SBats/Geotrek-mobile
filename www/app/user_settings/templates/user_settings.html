@@ -47,7 +47,7 @@
 			<ion-item>
 				<p class="float_left">{{ 'user_settings.alerts' | translate }} :</p>
 				<label class="float_left toggle toggle-royal pull-right">
-					<input type="checkbox" ng-model="poiAlert" >
+					<input type="checkbox" ng-model="poiAlert" ng-change="changePoiAlert(poiAlert)">
 					<div class="track">
 						<div class="handle"></div>
 					</div>

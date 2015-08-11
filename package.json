@@ -42,7 +42,8 @@
     "org.apache.cordova.console",
     "com.ionic.keyboard",
     "cordova-plugin-globalization",
-    "cordova-plugin-splashscreen"
+    "cordova-plugin-splashscreen",
+    "de.appplant.cordova.plugin.local-notification"
   ],
   "cordovaPlatforms": [
     "android",

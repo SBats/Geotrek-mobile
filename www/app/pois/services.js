@@ -4,22 +4,58 @@ function poisService($resource, $q, constants, settings, utils) {
 
 	var self = this;
 
-	this.trekPoisResource = $resource(settings.trekDir + ':trekId/' + constants.POI_FILE, { trekId: '@id' }, {
-		query: {
-			method: 'GET',
-			cache: true
-		}
-	});
-	this.poisResource = $resource(settings.poisUrl, {}, {
+	self.trekPoisResource = $resource(settings.trekDir + ':trekId/' + constants.POI_FILE, { trekId: '@id' }, {
 		query: {
 			method: 'GET',
 			cache: true
 		}
 	});
 
+	self.pois = {};
+	self.poisForTreks = {};
 
-	this.pois = {};
-	this.poisForTreks = {};
+	/**
+	 * Creates an array containing the downloaded POIs' id, and resolves the downloaded POIs
+	 *
+	 * @param {array} treks - Array of the downloaded treks
+	 * @param {bool} forceUpdate
+	 */
+	this.getDownloadedPois = function (treks, forceUpdate) {
+		var deferred = $q.defer();
+		var downloadedPoisRet = [];
+		var promises = [];
+
+		if (angular.isUndefined(forceUpdate)) {
+			forceUpdate = false;
+		}
+		if (angular.isDefined(self.downloadedPois) && forceUpdate === false) {
+			angular.forEach(self.downloadedPois, function (poiId) {
+				downloadedPoisRet.push(self.pois[poiId]);
+			});
+			deferred.resolve(downloadedPoisRet);
+		}
+		else {
+			self.downloadedPois = [];
+			angular.forEach(treks, function (trek) {
+
+				promises.push(self.getTrekPois(trek.id));
+				promises[promises.length - 1].then(function (pois) {
+					angular.forEach(pois, function (poi) {
+
+						if (!(self.downloadedPois.indexOf(poi.id) > -1)) {
+							self.downloadedPois.push(poi.id);
+						}
+					});
+				});
+			});
+			$q.all(promises).then(function (res) {
+				angular.forEach(self.downloadedPois, function (poiId) {
+					downloadedPoisRet.push(self.pois[poiId]);
+				});
+			});
+		}
+		return (deferred.promise);
+	};
 
 	/**
 	 * Returns an array containing the POIs for the given trek
@@ -51,6 +87,12 @@ function poisService($resource, $q, constants, settings, utils) {
 	this.getTrekPois = function (trekId) {
 		var deferred = $q.defer();
 
+		self.trekPoisResource = $resource(settings.trekDir + ':trekId/' + constants.POI_FILE, { trekId: '@id' }, {
+			query: {
+				method: 'GET',
+				cache: true
+			}
+		});
 		self.trekPoisResource.query({ trekId: trekId }).$promise
 		.then(function (file) {
 			var trekPois = angular.fromJson(file);
