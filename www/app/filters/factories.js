@@ -44,7 +44,7 @@ function filtersFactory($q, TreksService) {
 		}
 		else {
 			TreksService.getTreks(forceUpdate).then(function (treks) {
-				angular.forEach(treks.features, function (trek) {
+				angular.forEach(treks, function (trek) {
 					if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
 						filters.difficulties[trek.properties.difficulty.label] = {
 							isActive: false,
@@ -112,7 +112,7 @@ function filtersFactory($q, TreksService) {
 
 		getFilters().then(function (filters) {
 			TreksService.getTreks().then(function (treks) {
-				angular.forEach(treks.features, function (trek) {
+				angular.forEach(treks, function (trek) {
 					if (checkDifficulty(trek) && checkTime(trek) && checkPractice(trek)) {
 						filteredTreks.push(trek);
 					}

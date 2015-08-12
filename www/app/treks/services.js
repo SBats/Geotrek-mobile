@@ -16,11 +16,15 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 	this.replaceImgURLs = function(trek) {
 
 		trek.properties.thumbnail = utils.getAbsoluteUrl(trek.properties.thumbnail);
-		trek.properties.difficulty.pictogram = utils.getAbsoluteUrl(trek.properties.difficulty.pictogram);
+		if (trek.properties.difficulty) {
+			trek.properties.difficulty.pictogram = utils.getAbsoluteUrl(trek.properties.difficulty.pictogram);
+		}
 		if (trek.properties.practice) {
 			trek.properties.practice.pictogram = utils.getAbsoluteUrl(trek.properties.practice.pictogram);
 		}
-		trek.properties.route.pictogram = utils.getAbsoluteUrl(trek.properties.route.pictogram);
+		if (trek.properties.route) {
+			trek.properties.route.pictogram = utils.getAbsoluteUrl(trek.properties.route.pictogram);
+		}
 		angular.forEach(trek.properties.information_desks, function (information_desk) {
 			information_desk.photo_url = utils.getAbsoluteUrl(information_desk.photo_url);
 		});
@@ -36,6 +40,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 	 */
 	this.getTreks = function (forceUpdate) {
 		var deferred = $q.defer();
+		var tmpTreks;
 		var promises = [];
 
 		if (angular.isUndefined(forceUpdate)) {
@@ -48,9 +53,12 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 			treksResource = $resource(settings.treksUrl, {}, { query: { method: 'GET', cache: true } });
 			treksResource.query().$promise
 			.then(function(file) {
-				self.treks = angular.fromJson(file);
-				angular.forEach(self.treks.features, function (trek) {
+				tmpTreks = angular.fromJson(file);
+				self.treks = {};
+				angular.forEach(tmpTreks.features, function (trek) {
 
+					self.treks[trek.id] = trek;
+					console.log(trek);
 					promises.push(self.isTrekDownloaded(trek.id));
 					promises[promises.length - 1].then(function (res) {
 						trek.isDownloaded = res;
@@ -76,7 +84,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		self.getTreks().then(function (treks) {
 
 			var downloadedTreks = [];
-			angular.forEach(treks.features, function (trek) {
+			angular.forEach(treks, function (trek) {
 				if (trek.isDownloaded) {
 					downloadedTreks.push(trek);
 				}
@@ -93,7 +101,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 		var deferred = $q.defer();
 
 		this.getTreks().then(function (treks) {
-			angular.forEach(treks.features, function(trek) {
+			angular.forEach(treks, function(trek) {
 				if (trek.id === Number(trekId)) {
 					deferred.resolve(trek);
 				}
@@ -101,22 +109,6 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 			deferred.reject("Trek not found");
 		});
 		return (deferred.promise);
-	};
-
-	/**
-	 * Changes the value of 'isDownloaded' for the given trek
-	 *
-	 * @param {bool} value - New value of 'isDownloaded'
-	 */
-	this.setDownloadedValue = function(trekId, value) {
-
-		this.getTreks().then(function (treks) {
-			angular.forEach(treks.features, function(trek) {
-				if (trek.id === Number(trekId)) {
-					trek.isDownloaded = value;
-				}
-			});
-		});
 	};
 
 	/**
@@ -141,7 +133,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 			utils.downloadAndUnzip(settings.tilesZipUrl + trekId + '.zip', settings.tilesDir + '/' + trekId, trekId + '.zip')
 			.then(function (success) {
-				self.setDownloadedValue(trekId, true);
+				self.treks[trekId] = true;
 				deferred.resolve('ok');
 				updateDownloadedPois();
 			}, function (error) {
@@ -170,7 +162,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 			$cordovaFile.removeRecursively(settings.tilesDir, String(trekId))
 			.then(function (success) {
-				self.setDownloadedValue(trekId, false);
+				self.treks[trekId] = false;
 				deferred.resolve('ok');
 				updateDownloadedPois();
 

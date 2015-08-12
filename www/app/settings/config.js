@@ -2,7 +2,7 @@
 
 var settingsConstants = {
 
-	API_URL: 'http://prod-rando-fr.makina-corpus.net/data',
+	API_URL: 'http://itinerance.alpesrando.net/data',
 	DEFAULT_LANGUAGE: 'fr',
 
 	CONNECTED_REDIRECTION: 'root.treks_list',
