@@ -11,8 +11,8 @@ function poiRoutes($stateProvider) {
 			poi: function(PoisService, $stateParams) {
 				return (PoisService.getPoi($stateParams.poiId, $stateParams.trekId));
 			},
-			trek: function(TreksService, $stateParams) {
-				return (TreksService.getTrek($stateParams.trekId));
+			trek: function(TreksFactory, $stateParams) {
+				return (TreksFactory.getTrek($stateParams.trekId));
 			}
 		},
 		views: {

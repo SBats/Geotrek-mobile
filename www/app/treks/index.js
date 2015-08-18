@@ -2,4 +2,8 @@
 
 window.angular.module('app.treks', [])
 
-.service('TreksService', require('./services').treksService);
+.factory('TreksFactory', require('./factories').treksFactory)
+
+.service('TreksRemoteService', require('./services').TreksRemoteService)
+
+.service('TreksFileSystemService', require('./services').TreksFileSystemService);

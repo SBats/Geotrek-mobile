@@ -254,16 +254,16 @@ function utils($http, $translate, $ionicPopup, $q, $cordovaNetwork, $cordovaFile
 
 			if (downloadRes === constants.FILE_DOWNLOADED) {
 
-				//console.log('Download success');
+				console.log('Download success');
 				onUnzipNeeded();
 			}
 			else {
-				//console.log('Download not needed');
+				console.log('Download not needed');
 				deferred.resolve('ok');
 			}
 		}
 
-		//console.log('Downloading: ' + url + ' to: ' + filepath + ' with filename: ' + fileName);
+		console.log('Downloading: ' + url + ' to: ' + filepath + ' with filename: ' + fileName);
 		self.downloadFile(url, filepath, fileName, forceDownload)
 		.then(onDownloadSuccess, function (error) {
 			deferred.reject(error);

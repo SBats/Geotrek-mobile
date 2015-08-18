@@ -1,6 +1,6 @@
 'use strict';
 
-function filtersFactory($q, TreksService) {
+function filtersFactory($q, TreksFactory) {
 
 	/**
 	 * Filters initialization, durations are always the same, difficulies and practices are set in getFilters()
@@ -43,7 +43,7 @@ function filtersFactory($q, TreksService) {
 			deferred.resolve(filters);
 		}
 		else {
-			TreksService.getTreks(forceUpdate).then(function (treks) {
+			TreksFactory.getTreks(forceUpdate).then(function (treks) {
 				angular.forEach(treks, function (trek) {
 					if (trek.properties.difficulty && !filters.difficulties[trek.properties.difficulty.label]) {
 						filters.difficulties[trek.properties.difficulty.label] = {
@@ -111,9 +111,9 @@ function filtersFactory($q, TreksService) {
 		var	deferred = $q.defer();
 
 		getFilters().then(function (filters) {
-			TreksService.getTreks().then(function (treks) {
+			TreksFactory.getTreks().then(function (treks) {
 				angular.forEach(treks, function (trek) {
-					if (checkDifficulty(trek) && checkTime(trek) && checkPractice(trek)) {
+					if (checkDifficulty(trek) && checkTime(trek) && checkPractice(trek) && !trek.properties.parent) {
 						filteredTreks.push(trek);
 					}
 				});

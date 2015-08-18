@@ -41,6 +41,10 @@ function languageConfig($translateProvider, constants) {
 		'detailed_trek.transport' : 'Transports',
 		'detailed_trek.road_access' : 'Accès routiers',
 		'detailed_trek.website' : 'Site web',
+		'detailed_trek.parent' : 'Randonnée parente',
+		'detailed_trek.children' : 'Randonnées enfantes',
+		'detailed_trek.previous' : 'Randonnée précédente',
+		'detailed_trek.next' : 'Randonnée suivante',
 
 		// User settings translations
 		'user_settings.title' : 'Paramètres',
@@ -98,6 +102,10 @@ function languageConfig($translateProvider, constants) {
 		'detailed_trek.transport' : 'Transport network',
 		'detailed_trek.road_access' : 'Road access',
 		'detailed_trek.website' : 'Website',
+		'detailed_trek.parent' : 'Parent trek',
+		'detailed_trek.children' : 'Children trek',
+		'detailed_trek.previous' : 'Previous trek',
+		'detailed_trek.next' : 'Next trek',
 
 		// User settings translations
 		'user_settings.title' : 'Settings',

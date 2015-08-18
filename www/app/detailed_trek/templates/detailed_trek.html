@@ -114,7 +114,44 @@
 					</ion-slide>
 
 					<ion-slide>
-						Autres
+						<div ng-if="trek.properties.parent">
+							<div class="item item-divider">
+								{{ 'detailed_trek.parent' | translate }}
+							</div>
+							<div class="item" ui-sref="root.detailed_trek({ trekId: trek.properties.parent.id })">
+								{{ trek.properties.parent.properties.name }}
+							</div>
+						</div>
+
+						<div ng-if="trek.properties.children && trek.properties.children.length !== 0">
+							<div class="item item-divider">
+								{{ 'detailed_trek.children' | translate }}
+							</div>
+							<ion-list>
+								<ion-item ng-repeat="child in trek.properties.children" ui-sref="root.detailed_trek({ trekId: child.id })">
+									{{ child.properties.name }}
+								</ion-item>
+							</ion-list>
+						</div>
+						
+						<div ng-if="trek.properties.previous">
+							<div class="item item-divider">
+								{{ 'detailed_trek.previous' | translate }}
+							</div>
+							<div class="item" ui-sref="root.detailed_trek({ trekId: trek.properties.previous.id })">
+								{{ trek.properties.previous.properties.name }}
+							</div>
+						</div>
+						
+						<div ng-if="trek.properties.next">
+							<div class="item item-divider">
+								{{ 'detailed_trek.next' | translate }}
+							</div>
+							<div class="item" ui-sref="root.detailed_trek({ trekId: trek.properties.next.id })">
+								{{ trek.properties.next.properties.name }}
+							</div>
+						</div>
+						
 					</ion-slide>
 
 				</ion-slide-box>

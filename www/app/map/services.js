@@ -1,6 +1,6 @@
 'use strict';
 
-function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksService, PoisService, NotificationService) {
+function leafletService($state, $cordovaGeolocation, constants, settings, utils, FiltersFactory, IconsService, TreksFactory, PoisService, NotificationService) {
 
 	var userLocationMarker = null;
 	var watchPosition;
@@ -80,17 +80,14 @@ function leafletService($state, $cordovaGeolocation, constants, settings, utils,
 		});
 		watchPosition.then(null, null, function (location) {
 			if (window.localStorage.alertOnPoi) {
-				TreksService.getDownloadedTreks().then(function (treks) {
+				TreksFactory.getDownloadedTreks().then(function (treks) {
 					PoisService.getDownloadedPois(treks).then(function (pois) {
-						console.log('coucou1');
 						angular.forEach(pois, function (poi) {
 
-							console.log('coucou2');
 							if (!(notifiedPois.indexOf(poi.properties.id) > -1)) {
 								var poiCoord = utils.getStartPoint(poi);
 								var dist = utils.getDistanceFromLatLonInKm(poiCoord.lat, poiCoord.lng, location.coords.latitude, location.coords.longitude);
 
-								console.log('Distance from ' + poi.properties.name + ' : ' + dist);
 								if (dist <= constants.POI_NOTIF_MAX_DIST) { 
 									notifiedPois.push(poi.properties.id);
 									NotificationService.poiNotification(poi);

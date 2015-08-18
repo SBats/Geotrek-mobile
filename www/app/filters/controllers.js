@@ -1,6 +1,6 @@
 'use strict';
 
-function filtersController($rootScope, $state, $scope, filters, filteredTreks, FiltersFactory, TreksService) {
+function filtersController($rootScope, $state, $scope, filters, filteredTreks, FiltersFactory, TreksFactory) {
 
 	var filtersChanged = false;
 	var stateName = $state.current.name;

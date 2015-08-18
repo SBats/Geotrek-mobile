@@ -29,8 +29,8 @@ function listDisplayRoutes($stateProvider) {
 			}
 		},
 		resolve: {
-			treks: function (TreksService) {
-				return (TreksService.getDownloadedTreks());
+			treks: function (TreksFactory) {
+				return (TreksFactory.getDownloadedTreks());
 			}
 		}
 	});

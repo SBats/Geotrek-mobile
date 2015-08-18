@@ -27,8 +27,8 @@ function mapRoutes($stateProvider) {
 	.state('root.map.detailed', {
 		url: "/map/:trekId",
 		resolve : {
-			trek: function(TreksService, $stateParams) {
-				return (TreksService.getTrek($stateParams.trekId));
+			trek: function(TreksFactory, $stateParams) {
+				return (TreksFactory.getTrek($stateParams.trekId));
 			}
 		},
 		views: {

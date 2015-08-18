@@ -1,159 +1,167 @@
 'use strict';
 
-function treksService($resource, $http, $q, $cordovaFile, constants, settings, utils, PoisService) {
-
-	var treksResource = $resource(settings.treksUrl, {}, {
-		query: {
-			method: 'GET',
-			cache: true
-		}
-	});
+function TreksRemoteService($q) {
 	var self = this;
-
-	/**
-	 * Gets the absolute URLs for the given trek
-	 */
-	this.replaceImgURLs = function(trek) {
-
-		trek.properties.thumbnail = utils.getAbsoluteUrl(trek.properties.thumbnail);
-		if (trek.properties.difficulty) {
-			trek.properties.difficulty.pictogram = utils.getAbsoluteUrl(trek.properties.difficulty.pictogram);
-		}
-		if (trek.properties.practice) {
-			trek.properties.practice.pictogram = utils.getAbsoluteUrl(trek.properties.practice.pictogram);
-		}
-		if (trek.properties.route) {
-			trek.properties.route.pictogram = utils.getAbsoluteUrl(trek.properties.route.pictogram);
-		}
-		angular.forEach(trek.properties.information_desks, function (information_desk) {
-			information_desk.photo_url = utils.getAbsoluteUrl(information_desk.photo_url);
-		});
-		angular.forEach(trek.properties.pictures, function (picture) {
-			picture.url = utils.getAbsoluteUrl(picture.url, trek.id, trek.isDownloaded);
-		});
-	};
-
-	/**
-	 * Resolves the list of treks
-	 *
-	 * @param {bool} forceUpdate - if set to true, the function will update the treks, even if already saved
-	 */
-	this.getTreks = function (forceUpdate) {
-		var deferred = $q.defer();
-		var tmpTreks;
-		var promises = [];
-
-		if (angular.isUndefined(forceUpdate)) {
-			forceUpdate = false;
-		}
-		if (!forceUpdate && self.treks) {
-			deferred.resolve(self.treks);
-		}
-		else {
-			treksResource = $resource(settings.treksUrl, {}, { query: { method: 'GET', cache: true } });
-			treksResource.query().$promise
-			.then(function(file) {
-				tmpTreks = angular.fromJson(file);
-				self.treks = {};
-				angular.forEach(tmpTreks.features, function (trek) {
-
-					self.treks[trek.id] = trek;
-					console.log(trek);
-					promises.push(self.isTrekDownloaded(trek.id));
-					promises[promises.length - 1].then(function (res) {
-						trek.isDownloaded = res;
-						self.replaceImgURLs(trek);
-					});
-				});
-
-				$q.all(promises)
-				.then(function (res) {
-					deferred.resolve(self.treks);
-				});
-			});
-		}
-		return (deferred.promise);
-	};
-
-	/**
-	 * Resolves an array containing the downloaded treks
-	 */
-	this.getDownloadedTreks = function () {
-		var deferred = $q.defer();
-
-		self.getTreks().then(function (treks) {
-
-			var downloadedTreks = [];
-			angular.forEach(treks, function (trek) {
-				if (trek.isDownloaded) {
-					downloadedTreks.push(trek);
-				}
-			});
-			deferred.resolve(downloadedTreks);
-		});
-		return (deferred.promise);
-	};
-
-	/**
-	 * Resolves the trek corresponding to the given Id
-	 */
-	this.getTrek = function (trekId) {
-		var deferred = $q.defer();
-
-		this.getTreks().then(function (treks) {
-			angular.forEach(treks, function(trek) {
-				if (trek.id === Number(trekId)) {
-					deferred.resolve(trek);
-				}
-			});
-			deferred.reject("Trek not found");
-		});
-		return (deferred.promise);
-	};
-
-	/**
-	 *	Get the downloaded treks and calls the POI service function to update POIs
-	 */
-	function updateDownloadedPois() {
-
-		self.getDownloadedTreks().then(function (treks) {
-			PoisService.getDownloadedPois(treks, true);
-		});
-	}
 
 	/**
 	 * Downloads the specific files of the trek given in parameter
 	 */
-	this.downloadTrek = function (trekId) {
+	this.downloadTrek = function (treks, trekId) {
 
 		var deferred = $q.defer();
+		var downloads = JSON.parse(window.localStorage.downloads);
 
-		utils.downloadAndUnzip(settings.trekZipUrl + trekId + '.zip', settings.treksDir + '/' + trekId, trekId + '.zip')
-		.then(function (downloadRes) {
-
-			utils.downloadAndUnzip(settings.tilesZipUrl + trekId + '.zip', settings.tilesDir + '/' + trekId, trekId + '.zip')
-			.then(function (success) {
-				self.treks[trekId] = true;
-				deferred.resolve('ok');
-				updateDownloadedPois();
-			}, function (error) {
-				deferred.reject(error);
-			}, function (progress) {
-				deferred.notify(String((progress.loaded / progress.total) * 50 + 50) + '%');
-			});
-
-		}, function (error) {
-			deferred.reject(error);
-		}, function (progress) {
-			deferred.notify(String((progress.loaded / progress.total) * 50) + '%');
+		downloads[trekId] = true;
+		angular.forEach(treks[trekId].properties.children, function (child) {
+			downloads[child] = true;
 		});
+		window.localStorage.downloads = JSON.stringify(downloads);
+		deferred.resolve('ok');
 		return (deferred.promise);
 	};
 
 	/**
 	 * Deletes the specific files of the trek given in parameter
 	 */
-	this.deleteTrek = function (trekId) {
+	this.deleteTrek = function (treks, trekId) {
+
+		var deferred = $q.defer();
+		var downloads = JSON.parse(window.localStorage.downloads);
+
+		downloads[trekId] = false;
+		angular.forEach(treks[trekId].properties.children, function (child) {
+			downloads[child] = false;
+		});
+		window.localStorage.downloads = JSON.stringify(downloads);
+		deferred.resolve('ok');
+		return (deferred.promise);
+	};
+
+	/**
+	 * Resolves wether or not a trek is downloaded
+	 */
+	this.isTrekDownloaded = function (trekId) {
+		var deferred = $q.defer();
+
+		var downloads = JSON.parse(window.localStorage.downloads);
+		if (downloads[trekId]) {
+			deferred.resolve(true);
+		}
+		else {
+			deferred.resolve(false);
+		}
+
+		return (deferred.promise);
+	};
+}
+
+function TreksFileSystemService($q, $cordovaFile, utils, settings) {
+	var self = this;
+
+	/*
+	 * Recursively downloads the trek's children
+	 *
+	 *  @param {object} trek - The trek for which to download the children
+	 *  @param {number} currentChild - The child to download on this loop
+	 *  @param {object} deferred -
+	 *  @param {number} currentDl - The current number dl, used for the downloading bar
+	 */
+	function downloadChildren(treks, trek, currentChild, deferred, currentDl) {
+		var childId = trek.properties.children[currentChild];
+
+		if (angular.isUndefined(trek.properties.children) || currentChild >= trek.properties.children.length) {
+			deferred.resolve('ok');
+			return ;
+		}
+
+		utils.downloadAndUnzip(settings.trekZipUrl + childId + '.zip', settings.treksDir + '/' + childId, childId + '.zip')
+		.then(function (downloadRes) {
+
+			currentDl++;
+			utils.downloadAndUnzip(settings.tilesZipUrl + childId + '.zip', settings.tilesDir + '/' + childId, childId + '.zip')
+			.then(function (success) {
+
+				treks[childId].isDownloaded = true;
+				downloadChildren(treks, trek, currentChild + 1, deferred, currentDl + 1);
+			}, function (error) {
+				downloadChildren(treks, trek, currentChild + 1, deferred, currentDl + 1);
+			}, function (progress) {
+				deferred.notify({ current: currentDl, progress: (progress.loaded / progress.total) * 100 });
+			});
+
+		}, function (error) {
+			downloadChildren(treks, trek, currentChild + 1, deferred, currentDl + 2);
+		}, function (progress) {
+			deferred.notify({ current: currentDl, progress: (progress.loaded / progress.total) * 100 });
+		});
+	}
+
+	/**
+	 * Downloads the specific files of the trek given in parameter
+	 */
+	this.downloadTrek = function (treks, trekId) {
+
+		var deferred = $q.defer();
+		var currentDl = 0;
+
+		utils.downloadAndUnzip(settings.trekZipUrl + trekId + '.zip', settings.treksDir + '/' + trekId, trekId + '.zip')
+		.then(function (downloadRes) {
+
+			currentDl++;
+			utils.downloadAndUnzip(settings.tilesZipUrl + trekId + '.zip', settings.tilesDir + '/' + trekId, trekId + '.zip')
+			.then(function (success) {
+
+				treks[trekId].isDownloaded = true;
+				downloadChildren(treks, treks[trekId], 0, deferred, currentDl + 1);
+			}, function (error) {
+				deferred.reject(error);
+			}, function (progress) {
+				deferred.notify({ current: currentDl, progress: (progress.loaded / progress.total) * 100 });
+			});
+
+		}, function (error) {
+			deferred.reject(error);
+		}, function (progress) {
+			deferred.notify({ current: currentDl, progress: (progress.loaded / progress.total) * 100 });
+		});
+		return (deferred.promise);
+	};
+
+	/*
+	 * Recursively deletes the trek's children
+	 *
+	 *  @param {object} trek - The trek for which to delete the children
+	 *  @param {number} currentChild - The child to delete on this loop
+	 *  @param {object} deferred -
+	 */
+	function deleteChildren(trek, currentChild, deferred) {
+		var childId = trek.properties.children[currentChild];
+
+		if (angular.isUndefined(trek.properties.children) || currentChild >= trek.properties.children.length) {
+			deferred.resolve('ok');
+			return ;
+		}
+
+		$cordovaFile.removeRecursively(settings.treksDir, String(childId))
+		.then(function (success) {
+
+			$cordovaFile.removeRecursively(settings.tilesDir, String(childId))
+			.then(function (success) {
+
+				treks[childId].isDownloaded = false;
+				deleteChildren(treks, trek, currentChild + 1, deferred);
+			}, function (error) {
+				deleteChildren(treks, trek, currentChild + 1, deferred);
+			});
+		}, function (error) {
+			deleteChildren(treks, trek, currentChild + 1, deferred);
+		});
+	}
+
+	/**
+	 * Deletes the specific files of the trek given in parameter
+	 */
+	this.deleteTrek = function (treks, trekId) {
 
 		var deferred = $q.defer();
 
@@ -162,14 +170,12 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 			$cordovaFile.removeRecursively(settings.tilesDir, String(trekId))
 			.then(function (success) {
-				self.treks[trekId] = false;
-				deferred.resolve('ok');
-				updateDownloadedPois();
 
+				treks[trekId].isDownloaded = false;
+				deleteChildren(treks, treks[trekId], 0, deferred);
 			}, function (error) {
 				deferred.reject(error);
 			});
-
 		}, function (error) {
 			deferred.reject(error);
 		});
@@ -182,7 +188,7 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 	this.isTrekDownloaded = function (trekId) {
 		var deferred = $q.defer();
 
-		$cordovaFile.checkDir(settings.treksDir + '/', String(trekId))
+		$cordovaFile.checkDir(settings.treksDir + '/' + String(trekId) + '/', 'media')
 		.then(function (success) {
 			deferred.resolve(true);
 		}, function (error) {
@@ -191,9 +197,9 @@ function treksService($resource, $http, $q, $cordovaFile, constants, settings, u
 
 		return (deferred.promise);
 	};
-
 }
 
 module.exports = {
-	treksService: treksService
+	TreksRemoteService: TreksRemoteService,
+	TreksFileSystemService: TreksFileSystemService
 };

@@ -32,6 +32,9 @@ function initController($ionicHistory, $state, $scope, $translate, constants, se
 		});
 	}
 	else {
+		if (angular.isUndefined(window.localStorage.downloads)) {
+			window.localStorage.downloads = JSON.stringify({});
+		}
 		$scope.state = 'Loading translations';
 		LanguageService.applyTreksLang().then(function (res) {
 			LanguageService.applyInterfaceLang();

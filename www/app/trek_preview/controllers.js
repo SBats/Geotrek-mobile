@@ -1,10 +1,11 @@
 'use strict';
 
-function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek, constants, settings, utils, TreksService) {
+function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek, constants, settings, utils, TreksFactory) {
 
 	$scope.downloadTrek = function () {
 
 		var loadingBar = document.getElementById('loading_bar');
+		var nbDownloads;
 
 		$ionicPopup.confirm({
 			title: 'Téléchargement',
@@ -12,10 +13,13 @@ function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek,
 		}).then(function (res) {
 			if (res) {
 
+				nbDownloads = 2 + trek.properties.children.length * 2;
+
 				$scope.downloadButton = 'hide';
 				$scope.loadingBar = '';
+				loadingBar.style.width = '0%';
 
-				TreksService.downloadTrek(trek.id).then(function (success) {
+				TreksFactory.downloadTrek(trek.id).then(function (success) {
 
 					$ionicPopup.alert({
 						template: 'Téléchargement terminé'
@@ -27,7 +31,7 @@ function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek,
 				}, function (error) {
 					console.log(error);
 				}, function (progress) {
-					loadingBar.style.width = progress;
+					loadingBar.style.width = String((progress.current * (100 / nbDownloads)) + progress.progress / nbDownloads) + '%';
 				});
 			}
 		});

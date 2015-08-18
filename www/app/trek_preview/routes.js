@@ -8,8 +8,8 @@ function trekPreviewRoutes($stateProvider) {
 	.state('root.trek_preview', {
 		url: "/preview-:trekId",
 		resolve: {
-			trek: function(TreksService, $stateParams) {
-				return (TreksService.getTrek($stateParams.trekId));
+			trek: function(TreksFactory, $stateParams) {
+				return (TreksFactory.getTrek($stateParams.trekId));
 			}
 		},
 		views: {
@@ -23,8 +23,8 @@ function trekPreviewRoutes($stateProvider) {
 	.state('root.check_trek', {
 		url: "/check-trek-:trekId",
 		resolve: {
-			isTrekDownloaded: function(TreksService, $stateParams) {
-				return (TreksService.isTrekDownloaded($stateParams.trekId));
+			isTrekDownloaded: function(TreksFactory, $stateParams) {
+				return (TreksFactory.isTrekDownloaded($stateParams.trekId));
 			}
 		},
 		views: {

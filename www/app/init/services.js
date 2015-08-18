@@ -1,6 +1,6 @@
 'use strict';
 
-function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, constants, utils, LanguageService, TreksService, LeafletService) {
+function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, constants, utils, LanguageService, TreksFactory, LeafletService) {
 
 	/**
 	 * Check for updates for each downloaded trek's specific files
@@ -10,10 +10,10 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 		var promises = [];
 
 		deferred.notify('Updating downloaded treks');
-		TreksService.getDownloadedTreks().then(function (treks) {
+		TreksFactory.getDownloadedTreks().then(function (treks) {
 
 			angular.forEach(treks, function (trek) {
-				promises.push = TreksService.downloadTrek(trek.id);
+				promises.push = TreksFactory.downloadTrek(trek.id);
 			});
 			$q.all(promises).then(function (res) {
 				deferred.resolve('updated');

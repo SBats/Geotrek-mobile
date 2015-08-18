@@ -8,11 +8,11 @@ function detailedTrekRoutes($stateProvider) {
 	.state('root.detailed_trek', {
 		url: "/trek-:trekId",
 		resolve: {
-			trek: function(TreksService, $stateParams) {
-				return (TreksService.getTrek($stateParams.trekId));
+			treks: function(TreksFactory) {
+				return (TreksFactory.getTreks());
 			},
-			pois: function(PoisService, trek) {
-				return (PoisService.getTrekPois(trek.id));
+			pois: function(PoisService, $stateParams) {
+				return (PoisService.getTrekPois($stateParams.trekId));
 			}
 		},
 		views: {

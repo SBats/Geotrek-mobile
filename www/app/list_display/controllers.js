@@ -1,11 +1,11 @@
 'use strict';
 
-function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, TreksService, FiltersFactory) {
+function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, TreksFactory, FiltersFactory) {
 
 	$scope.treks = treks;
 
 	$scope.downloadCallback = function (trekId) {
-		TreksService.isTrekDownloaded(trekId).then(function (res) {
+		TreksFactory.isTrekDownloaded(trekId).then(function (res) {
 			if (res === true) {
 
 				$ionicPopup.confirm({
@@ -14,7 +14,7 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, T
 				}).then(function (res) {
 
 					if (res) {						
-						TreksService.deleteTrek(trekId).then(function (res) {
+						TreksFactory.deleteTrek(trekId).then(function (res) {
 
 							$ionicPopup.alert({
 								template: 'Randonnée supprimée'
@@ -31,7 +31,7 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, T
 	};
 
 	$scope.goToTrek = function (trekId) {
-		TreksService.isTrekDownloaded(trekId).then(function (res) {
+		TreksFactory.isTrekDownloaded(trekId).then(function (res) {
 			if (res === true) {
 				$state.go('root.detailed_trek', { trekId : trekId });
 			}

@@ -1,6 +1,6 @@
 'use strict';
 
-function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksService) {
+function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksFactory) {
 
 	function clearAndReload() {
 		$ionicHistory.clearCache();
@@ -81,9 +81,9 @@ function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, cons
 		}).then(function (res) {
 
 			if (res) {						
-				TreksService.getDownloadedTreks().then(function (res) {
+				TreksFactory.getDownloadedTreks().then(function (res) {
 					angular.forEach(treks, function (trek) {
-						promises.push(TreksService.deleteTrek(trek.id));
+						promises.push(TreksFactory.deleteTrek(trek.id));
 					});
 					$q.all(promises).then(function (res) {
 						$ionicPopup.alert({

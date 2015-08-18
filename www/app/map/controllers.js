@@ -23,7 +23,7 @@ function globalMapController($rootScope, $scope, LeafletService) {
 	$scope.$parent.title = 'Carte';
 }
 
-function detailedMapController($ionicHistory, $rootScope, $scope, $state, constants, settings, utils, trek, TreksService, LeafletService) {
+function detailedMapController($ionicHistory, $rootScope, $scope, $state, constants, settings, utils, trek, TreksFactory, LeafletService) {
 
 	$scope.$parent.switchToText = function () {
 		$ionicHistory.nextViewOptions({	disableBack: true });
