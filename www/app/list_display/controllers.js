@@ -1,6 +1,6 @@
 'use strict';
 
-function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, TreksFactory, FiltersFactory) {
+function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHistory, treks, TreksFactory, FiltersFactory) {
 
 	$scope.treks = treks;
 
@@ -13,13 +13,13 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, T
 					template: 'Etes vous sur de vouloir supprimer cette rando ?'
 				}).then(function (res) {
 
-					if (res) {						
+					if (res) {
 						TreksFactory.deleteTrek(trekId).then(function (res) {
 
+							$rootScope.$emit('treksChanged', {});
 							$ionicPopup.alert({
 								template: 'Randonnée supprimée'
 							});
-							document.getElementById('dl_' + trekId).style.color = '#333';
 						});
 					}
 				});
@@ -41,10 +41,15 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, treks, T
 		});
 	};
 
+	function updateTreks() {
+		$ionicHistory.clearCache();
+	}
+
 	$rootScope.$on('filtersChanged', function () {
-		FiltersFactory.getFilteredTreks().then(function (treks) {
-			$scope.treks = treks;
-		});
+		updateTreks();
+	});
+	$rootScope.$on('treksChanged', function () {
+		updateTreks();
 	});
 }
 

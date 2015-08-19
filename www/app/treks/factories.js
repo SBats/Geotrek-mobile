@@ -92,6 +92,23 @@ function treksFactory($injector, $resource, $http, $q, $cordovaFile, constants, 
 		return (deferred.promise);
 	};
 
+	var getDownloadedParentTreks = function () {
+		var deferred = $q.defer();
+
+		getTreks().then(function (treks) {
+
+			var downloadedTreks = [];
+			angular.forEach(treks, function (trek) {
+				if (trek.isDownloaded && !trek.properties.parent) {
+					downloadedTreks.push(trek);
+				}
+			});
+			deferred.resolve(downloadedTreks);
+		});
+		return (deferred.promise);
+	};
+
+
 	/**
 	 * Resolves the trek corresponding to the given Id
 	 */
@@ -146,6 +163,7 @@ function treksFactory($injector, $resource, $http, $q, $cordovaFile, constants, 
 		getTreks: getTreks,
 		getTrek: getTrek,
 		getDownloadedTreks: getDownloadedTreks,
+		getDownloadedParentTreks: getDownloadedParentTreks,
 		isTrekDownloaded: isTrekDownloaded,
 		downloadTrek: downloadTrek,
 		deleteTrek: deleteTrek

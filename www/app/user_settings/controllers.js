@@ -75,6 +75,7 @@ function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, cons
 	$scope.cleanData = function () {
 		var promises = [];
 
+		console.log('coucou');
 		$ionicPopup.confirm({
 			title: 'Supprimer les données',
 			template: 'Etes vous sur de vouloir supprimer les données téléchargées ?'

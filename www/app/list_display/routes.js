@@ -30,7 +30,7 @@ function listDisplayRoutes($stateProvider) {
 		},
 		resolve: {
 			treks: function (TreksFactory) {
-				return (TreksFactory.getDownloadedTreks());
+				return (TreksFactory.getDownloadedParentTreks());
 			}
 		}
 	});

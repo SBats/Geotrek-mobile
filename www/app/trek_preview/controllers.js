@@ -1,6 +1,6 @@
 'use strict';
 
-function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek, constants, settings, utils, TreksFactory) {
+function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionicPopup, trek, constants, settings, utils, TreksFactory) {
 
 	$scope.downloadTrek = function () {
 
@@ -21,6 +21,7 @@ function trekPreviewController($ionicHistory, $state, $scope, $ionicPopup, trek,
 
 				TreksFactory.downloadTrek(trek.id).then(function (success) {
 
+					$rootScope.$emit('treksChanged', {});
 					$ionicPopup.alert({
 						template: 'Téléchargement terminé'
 					}).then(function (res) {

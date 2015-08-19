@@ -12,8 +12,10 @@ function TreksRemoteService($q) {
 		var downloads = JSON.parse(window.localStorage.downloads);
 
 		downloads[trekId] = true;
+		treks[trekId].isDownloaded = true;
 		angular.forEach(treks[trekId].properties.children, function (child) {
 			downloads[child] = true;
+			treks[child].isDownloaded = true;
 		});
 		window.localStorage.downloads = JSON.stringify(downloads);
 		deferred.resolve('ok');
@@ -28,9 +30,12 @@ function TreksRemoteService($q) {
 		var deferred = $q.defer();
 		var downloads = JSON.parse(window.localStorage.downloads);
 
+		console.log(treks[trekId]);
 		downloads[trekId] = false;
+		treks[trekId].isDownloaded = false;
 		angular.forEach(treks[trekId].properties.children, function (child) {
 			downloads[child] = false;
+			treks[child].isDownloaded = false;
 		});
 		window.localStorage.downloads = JSON.stringify(downloads);
 		deferred.resolve('ok');

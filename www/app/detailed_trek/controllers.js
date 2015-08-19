@@ -17,14 +17,16 @@ function detailedTrekController($ionicHistory, $state, $stateParams, $scope, $io
 	};
 
 
+	$scope.trek = trek;
+	$scope.relatedTreks = {};
 	if (trek.properties.parent) {
-		trek.properties.parent = (treks[trek.properties.parent].isDownloaded ? treks[trek.properties.parent] : null);
+		$scope.relatedTreks.parent = (treks[trek.properties.parent].isDownloaded ? treks[trek.properties.parent] : null);
 	}
 	if (trek.properties.next) {
-		trek.properties.next = (treks[trek.properties.next].isDownloaded ? treks[trek.properties.next] : null);
+		$scope.relatedTreks.next = (treks[trek.properties.next].isDownloaded ? treks[trek.properties.next] : null);
 	}
 	if (trek.properties.previous) {
-		trek.properties.previous = (treks[trek.properties.previous].isDownloaded ? treks[trek.properties.previous] : null);
+		$scope.relatedTreks.previous = (treks[trek.properties.previous].isDownloaded ? treks[trek.properties.previous] : null);
 	}
 	if (trek.properties.children.length > 0) {
 		angular.forEach(trek.properties.children, function (child) {
@@ -32,9 +34,8 @@ function detailedTrekController($ionicHistory, $state, $stateParams, $scope, $io
 				children[child] = treks[child];
 			}
 		});
-		trek.properties.children = children;
+		$scope.relatedTreks.children = children;
 	}
-	$scope.trek = trek;
 	$scope.pois = pois;
 	$scope.selected = 'infos';
 }
