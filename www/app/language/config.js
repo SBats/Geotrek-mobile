@@ -16,6 +16,13 @@ function languageConfig($translateProvider, constants) {
 		'layout.flat_pages' : 'Pages statiques',
 		'layout.settings' : 'Paramètres',
 
+		// Init translations
+		'init.loading_translations' : 'Chargement des traductions',
+		'init.loading_treks' : 'Chargement des randonnées',
+		'init.loading_tiles' : 'Chargement des fonds de carte',
+		'init.updating_treks' : 'Mise à jour des randonnées téléchargées',
+		'init.done' : 'Fini, redirection en cours',
+
 		// Treks list translation
 		'treks_list.title': 'Gallerie des randonnées',
 		'treks_list.filter': 'Filtrer',
@@ -76,6 +83,13 @@ function languageConfig($translateProvider, constants) {
 		'layout.favorites' : 'My treks',
 		'layout.flat_pages' : 'Flat pages',
 		'layout.settings' : 'Settings',
+
+		// Init translations
+		'init.loading_translations' : 'Loading translations',
+		'init.loading_treks' : 'Loading treks',
+		'init.loading_tiles' : 'Loading tiles',
+		'init.updating_treks' : 'Updating downloaded treks',
+		'init.done' : 'Done, redirecting',
 
 		// Treks list translation
 		'treks_list.title': 'Treks gallery',

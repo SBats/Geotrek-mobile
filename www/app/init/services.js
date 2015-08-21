@@ -9,7 +9,7 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 		var deferred = $q.defer();
 		var promises = [];
 
-		deferred.notify('Updating downloaded treks');
+		deferred.notify('init.updating_treks');
 		TreksFactory.getDownloadedTreks().then(function (treks) {
 
 			angular.forEach(treks, function (trek) {
@@ -25,17 +25,16 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 	/**
 	 * Downloads global treks and tiles files. Initializes languague.
 	 */
-	this.getDeviceFiles = function () {
+	this.getDeviceFiles = function (translations) {
 		var deferred = $q.defer();
 
 		document.addEventListener('deviceready', onDeviceReady, false);
 
 		function onDeviceReady() {
 
-			deferred.notify('Loading translations');
+			deferred.notify('init.loading_translations');
 			LanguageService.applyTreksLang().then(function (res) {
 				LanguageService.applyInterfaceLang();
-
 
 				if ($cordovaNetwork.isOffline()) {
 					settings.isConnected = false;
@@ -47,16 +46,16 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 					if ($cordovaNetwork.getNetwork === 'wifi' || window.localStorage.syncMode === 'all') {
 
 						// Downloads the .zip containing the main geojson and the tiles
-						deferred.notify('Loading treks');
+						deferred.notify('init.loading_treks');
 						utils.downloadAndUnzip(settings.globalTrekZipUrl, settings.treksDir + '/' + constants.GLOBAL_DIR, constants.GLOBAL_ZIP)
 						.then(function (downloadRes) {
 
-							deferred.notify('Loading tiles');
+							deferred.notify('init.loading_tiles');
 							utils.downloadAndUnzip(settings.globalTilesZipUrl, settings.tilesDir + '/' + constants.GLOBAL_DIR, constants.GLOBAL_ZIP)
 							.then(function (downloadRes) {
 
-								updateTreks().then(function (res) {
-									deferred.notify('Done');
+								updateTreks(translations).then(function (res) {
+									deferred.notify('init.done');
 									deferred.resolve(constants.CONNECTED_REDIRECTION);
 								});
 							}, function (error) {

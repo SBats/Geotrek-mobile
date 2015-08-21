@@ -1,7 +1,8 @@
 'use strict';
 
-function initController($ionicHistory, $state, $scope, $translate, constants, settings, InitService, LanguageService) {
+function initController($ionicHistory, $state, $scope, translations, constants, settings, InitService, LanguageService, LeafletService) {
 
+	console.log(translations);
 	$ionicHistory.nextViewOptions({	disableBack: true });
 	if (angular.isUndefined(window.localStorage.syncMode)) {
 		window.localStorage.syncMode = 'all';
@@ -11,7 +12,7 @@ function initController($ionicHistory, $state, $scope, $translate, constants, se
 	}
 
 	if (settings.isDevice) {
-		InitService.getDeviceFiles().then(function (res) {
+		InitService.getDeviceFiles(translations).then(function (res) {
 
 			var validState = false;
 			var states = $state.get();
@@ -38,10 +39,10 @@ function initController($ionicHistory, $state, $scope, $translate, constants, se
 		if (angular.isUndefined(window.localStorage.downloads)) {
 			window.localStorage.downloads = JSON.stringify({});
 		}
-		$scope.state = 'Loading translations';
+		LanguageService.applyInterfaceLang();
+		$scope.state = 'init.loading_translations';
 		LanguageService.applyTreksLang().then(function (res) {
-			LanguageService.applyInterfaceLang();
-			$scope.state = 'Done, redirecting';
+			$scope.state = 'init.done';
 			$state.go(constants.CONNECTED_REDIRECTION);
 		});
 	}
