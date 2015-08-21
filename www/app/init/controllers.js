@@ -16,6 +16,9 @@ function initController($ionicHistory, $state, $scope, $translate, constants, se
 			var validState = false;
 			var states = $state.get();
 
+			if (window.localStorage.alertOnPoi) {
+				LeafletService.startWatchPosition();
+			}
 			if (!settings.isConnected) {
 				$scope.$parent.hide = false;
 			}

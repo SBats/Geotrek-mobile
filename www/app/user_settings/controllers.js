@@ -1,6 +1,6 @@
 'use strict';
 
-function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksFactory) {
+function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, $timeout, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksFactory) {
 
 	function clearAndReload() {
 		$ionicHistory.clearCache();
@@ -68,28 +68,36 @@ function userSettingsController($state, $scope, $ionicPopup, $ionicHistory, cons
 
 	$scope.poiAlert = window.localStorage.alertOnPoi;
 	$scope.changePoiAlert = function(value) {
-		console.log(value);
 		window.localStorage.alertOnPoi = value;
 	};
 
 	$scope.cleanData = function () {
 		var promises = [];
 
-		console.log('coucou');
 		$ionicPopup.confirm({
 			title: 'Supprimer les données',
 			template: 'Etes vous sur de vouloir supprimer les données téléchargées ?'
 		}).then(function (res) {
 
-			if (res) {						
-				TreksFactory.getDownloadedTreks().then(function (res) {
+			if (res) {
+				var myPopup = $ionicPopup.show({
+					template: 'Suppression en cours',
+					title: 'Supression',
+					scope: $scope
+				});
+				TreksFactory.getDownloadedTreks().then(function (treks) {
 					angular.forEach(treks, function (trek) {
-						promises.push(TreksFactory.deleteTrek(trek.id));
+						if (!trek.properties.parent) {
+							promises.push(TreksFactory.deleteTrek(trek.id));
+						}
 					});
 					$q.all(promises).then(function (res) {
-						$ionicPopup.alert({
-							template: 'Langue changée'
-						})
+						$timeout(function () {
+							myPopup.close();
+							$ionicPopup.alert({
+								template: 'Données supprimées'
+							});
+						}, 1000);
 					});
 				});
 			}

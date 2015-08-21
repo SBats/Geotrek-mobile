@@ -1,6 +1,6 @@
 'use strict';
 
-function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHistory, treks, TreksFactory, FiltersFactory) {
+function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHistory, $timeout, treks, TreksFactory, FiltersFactory) {
 
 	$scope.treks = treks;
 
@@ -14,12 +14,22 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHi
 				}).then(function (res) {
 
 					if (res) {
+						var myPopup = $ionicPopup.show({
+							template: 'Suppression en cours',
+							title: 'Supression',
+							scope: $scope
+						});
 						TreksFactory.deleteTrek(trekId).then(function (res) {
 
-							$rootScope.$emit('treksChanged', {});
-							$ionicPopup.alert({
-								template: 'Randonnée supprimée'
-							});
+							$timeout(function () {
+								myPopup.close();
+								$timeout(function () {
+									$rootScope.$emit('treksChanged', {});
+									$ionicPopup.alert({
+										template: 'Randonnée supprimée'
+									});
+								}, 200);
+							}, 200);
 						});
 					}
 				});

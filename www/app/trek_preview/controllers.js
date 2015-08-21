@@ -1,10 +1,10 @@
 'use strict';
 
-function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionicPopup, trek, constants, settings, utils, TreksFactory) {
+function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionicPopup, $timeout, trek, constants, settings, utils, TreksFactory) {
 
 	$scope.downloadTrek = function () {
 
-		var loadingBar = document.getElementById('loading_bar');
+		var loadingBar;
 		var nbDownloads;
 
 		$ionicPopup.confirm({
@@ -15,24 +15,35 @@ function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionic
 
 				nbDownloads = 2 + trek.properties.children.length * 2;
 
+				var myPopup = $ionicPopup.show({
+					template: '<div id="loading_bar_container"><div id="loading_bar" style="width: {{ loading }}"></div></div>',
+					title: 'Téléchargement en cours',
+					scope: $scope
+				});
+
 				$scope.downloadButton = 'hide';
 				$scope.loadingBar = '';
-				loadingBar.style.width = '0%';
+				$scope.loading = '0%';
 
 				TreksFactory.downloadTrek(trek.id).then(function (success) {
 
-					$rootScope.$emit('treksChanged', {});
-					$ionicPopup.alert({
-						template: 'Téléchargement terminé'
-					}).then(function (res) {
-						$ionicHistory.nextViewOptions({	disableBack: true });
-						$state.go('root.detailed_trek', { trekId: trek.id });
-					});
+					$timeout(function () {
+						myPopup.close();
+						$timeout(function () {
+							$rootScope.$emit('treksChanged', {});
+							$ionicPopup.alert({
+								template: 'Téléchargement terminé'
+							}).then(function (res) {
+								$ionicHistory.nextViewOptions({	disableBack: true });
+								$state.go('root.detailed_trek', { trekId: trek.id });
+							});
+						}, 200);
+					}, 200);
 
 				}, function (error) {
 					console.log(error);
 				}, function (progress) {
-					loadingBar.style.width = String((progress.current * (100 / nbDownloads)) + progress.progress / nbDownloads) + '%';
+					$scope.loading = String((progress.current * (100 / nbDownloads)) + progress.progress / nbDownloads) + '%';
 				});
 			}
 		});

@@ -30,7 +30,6 @@ function TreksRemoteService($q) {
 		var deferred = $q.defer();
 		var downloads = JSON.parse(window.localStorage.downloads);
 
-		console.log(treks[trekId]);
 		downloads[trekId] = false;
 		treks[trekId].isDownloaded = false;
 		angular.forEach(treks[trekId].properties.children, function (child) {
@@ -139,7 +138,7 @@ function TreksFileSystemService($q, $cordovaFile, utils, settings) {
 	 *  @param {number} currentChild - The child to delete on this loop
 	 *  @param {object} deferred -
 	 */
-	function deleteChildren(trek, currentChild, deferred) {
+	function deleteChildren(treks, trek, currentChild, deferred) {
 		var childId = trek.properties.children[currentChild];
 
 		if (angular.isUndefined(trek.properties.children) || currentChild >= trek.properties.children.length) {

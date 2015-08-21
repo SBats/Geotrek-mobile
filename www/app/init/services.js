@@ -36,9 +36,7 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 			LanguageService.applyTreksLang().then(function (res) {
 				LanguageService.applyInterfaceLang();
 
-				if (window.localStorage.alertOnPoi) {
-					LeafletService.startWatchPosition();
-				}
+
 				if ($cordovaNetwork.isOffline()) {
 					settings.isConnected = false;
 					settings.leafletBackgroundUrl = settings.tilesDir + '/' + constants.GLOBAL_DIR + '/{z}/{x}/{y}.png';
