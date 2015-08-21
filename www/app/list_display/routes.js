@@ -4,6 +4,13 @@ var controllers = require('./controllers');
 
 function listDisplayRoutes($stateProvider) {
 	
+	var translations = [
+		'treks_list.delete',
+		'treks_list.confirm_delete',
+		'treks_list.deleting',
+		'treks_list.trek_deleted'
+	];
+
 	$stateProvider
 	.state('root.treks_list', {
 		url: "/treks",
@@ -16,6 +23,9 @@ function listDisplayRoutes($stateProvider) {
 		resolve: {
 			treks: function (FiltersFactory) {
 				return (FiltersFactory.getFilteredTreks());
+			},
+			translations: function ($translate) {
+				return ($translate(translations));
 			}
 		}
 	})
@@ -31,6 +41,9 @@ function listDisplayRoutes($stateProvider) {
 		resolve: {
 			treks: function (TreksFactory) {
 				return (TreksFactory.getDownloadedParentTreks());
+			},
+			translations: function ($translate) {
+				return ($translate(translations));
 			}
 		}
 	});

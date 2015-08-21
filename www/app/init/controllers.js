@@ -40,9 +40,9 @@ function initController($ionicHistory, $state, $scope, translations, constants, 
 			window.localStorage.downloads = JSON.stringify({});
 		}
 		LanguageService.applyInterfaceLang();
-		$scope.state = 'init.loading_translations';
+		$scope.state = translations['init.loading_translations'];
 		LanguageService.applyTreksLang().then(function (res) {
-			$scope.state = 'init.done';
+			$scope.state = translations['init.done'];
 			$state.go(constants.CONNECTED_REDIRECTION);
 		});
 	}

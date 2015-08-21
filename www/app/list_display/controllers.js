@@ -1,6 +1,6 @@
 'use strict';
 
-function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHistory, $timeout, treks, TreksFactory, FiltersFactory) {
+function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHistory, $timeout, translations, treks, TreksFactory, FiltersFactory) {
 
 	$scope.treks = treks;
 
@@ -9,14 +9,14 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHi
 			if (res === true) {
 
 				$ionicPopup.confirm({
-					title: 'Téléchargement',
-					template: 'Etes vous sur de vouloir supprimer cette rando ?'
+					title: translations['treks_list.delete'],
+					template: translations['treks_list.confirm_delete']
 				}).then(function (res) {
 
 					if (res) {
 						var myPopup = $ionicPopup.show({
-							template: 'Suppression en cours',
-							title: 'Supression',
+							title: translations['treks_list.delete'],
+							template: translations['treks_list.deleting'],
 							scope: $scope
 						});
 						TreksFactory.deleteTrek(trekId).then(function (res) {
@@ -26,7 +26,7 @@ function listDisplayController($rootScope, $scope, $state, $ionicPopup, $ionicHi
 								$timeout(function () {
 									$rootScope.$emit('treksChanged', {});
 									$ionicPopup.alert({
-										template: 'Randonnée supprimée'
+										template: translations['treks_list.trek_deleted']
 									});
 								}, 200);
 							}, 200);

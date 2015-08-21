@@ -26,6 +26,10 @@ function languageConfig($translateProvider, constants) {
 		// Treks list translation
 		'treks_list.title': 'Gallerie des randonnées',
 		'treks_list.filter': 'Filtrer',
+		'treks_list.delete' : 'Supprimer',
+		'treks_list.confirm_delete' : 'Etes vous sur de vouloir supprimer cette randonnée ?',
+		'treks_list.deleting' : 'Suppression en cours',
+		'treks_list.trek_deleted' : 'Randonnée supprimée',
 
 		// Map translation
 		'map.filter' : 'Filtrer',
@@ -34,6 +38,9 @@ function languageConfig($translateProvider, constants) {
 		'trek_preview.title' : 'Prévisualisation de la randonnée',
 		'trek_preview.info' : 'Pour avoir accès au reste des informations du trek ainsi qu\'à sa carte détaillé, il est nécessaire de le télécharger.',
 		'trek_preview.download' : 'Télécharger',
+		'trek_preview.downloading' : 'Téléchargement',
+		'trek_preview.confirm_download' : 'Etes vous sur de vouloir télécharger cette randonnée ?',
+		'trek_preview.downloaded' : 'Randonnée téléchargée',
 
 		// Downloaded treks translation
 		'favorites.title' : 'Mes randos',
@@ -67,7 +74,16 @@ function languageConfig($translateProvider, constants) {
 		'user_settings.clean_data' : 'Nettoyer les données téléchargées',
 		'user_settings.delete' : 'Supprimer',
 		'user_settings.leave' : 'Quitter',
-		'user_settings.leave_app' : 'Quitter l\'application'
+		'user_settings.leave_app' : 'Quitter l\'application',
+		'user_settings.lang_changed' : 'Langue changée',
+		'user_settings.change_lang' : 'Changement de langue',
+		'user_settings.confirm_change_lang_interface' : 'Etes vous sur de vouloir changer la langue de l\'interface ?',
+		'user_settings.confirm_change_lang_data' : 'Etes vous sur de vouloir changer la langue des données ?',
+		'user_settings.delete_data' : 'Supprimer les données',
+		'user_settings.confirm_delete_data' : 'Etes vous sur de vouloir supprimer les données téléchargées ?',
+		'user_settings.deleting' : 'Supression',
+		'user_settings.deleting_data' : 'Suppression en cours',
+		'user_settings.data_deleted' : 'Données supprimées'
 	});
 
 	$translateProvider.translations('en', {
@@ -92,8 +108,12 @@ function languageConfig($translateProvider, constants) {
 		'init.done' : 'Done, redirecting',
 
 		// Treks list translation
-		'treks_list.title': 'Treks gallery',
-		'treks_list.filter': 'Filter',
+		'treks_list.title' : 'Treks gallery',
+		'treks_list.filter' : 'Filter',
+		'treks_list.delete' : 'Delete',
+		'treks_list.confirm_delete' : 'Are you sure you want to delete this trek ?',
+		'treks_list.deleting' : 'Deleting',
+		'treks_list.trek_deleted' : 'Trek deleted',
 
 		// Map translation
 		'map.filter' : 'Filter',
@@ -102,6 +122,9 @@ function languageConfig($translateProvider, constants) {
 		'trek_preview.title' : 'Trek preview',
 		'trek_preview.info' : 'To access the detailed data and the trek\'s map, you need to download it.',
 		'trek_preview.download' : 'Download',
+		'trek_preview.downloading' : 'Downloading',
+		'trek_preview.confirm_download' : 'Are you sure you want to download this trek ?',
+		'trek_preview.downloaded' : 'Trek downloaded',
 
 		// Downloaded treks translation
 		'favorites.title' : 'My treks',
@@ -135,7 +158,16 @@ function languageConfig($translateProvider, constants) {
 		'user_settings.clean_data' : 'Clean the downloaded data',
 		'user_settings.delete' : 'Delete',
 		'user_settings.leave' : 'Leave',
-		'user_settings.leave_app' : 'Leave application'
+		'user_settings.leave_app' : 'Leave application',
+		'user_settings.lang_changed' : 'Language changed',
+		'user_settings.change_lang' : 'Change language',
+		'user_settings.confirm_change_lang_interface' : 'Are you sure you want to change the interface language ?',
+		'user_settings.confirm_change_lang_data' : 'Are you sure you want to change the datas language ?',
+		'user_settings.delete_data' : 'Delete datas',
+		'user_settings.confirm_delete_data' : 'Are you sure you want to delete the datas ?',
+		'user_settings.deleting' : 'Deleting',
+		'user_settings.deleting_data' : 'Deleting datas',
+		'user_settings.data_deleted' : 'Datas deleted'
 	});
 	$translateProvider.preferredLanguage(constants.DEFAULT_LANGUAGE);
 }

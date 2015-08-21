@@ -1,6 +1,6 @@
 'use strict';
 
-function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionicPopup, $timeout, trek, constants, settings, utils, TreksFactory) {
+function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionicPopup, $timeout, trek, translations, constants, settings, utils, TreksFactory) {
 
 	$scope.downloadTrek = function () {
 
@@ -8,16 +8,16 @@ function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionic
 		var nbDownloads;
 
 		$ionicPopup.confirm({
-			title: 'Téléchargement',
-			template: 'Etes vous sur de vouloir télécharger cette rando ?'
+			title: translations['trek_preview.download'],
+			template: translations['trek_preview.confirm_download']
 		}).then(function (res) {
 			if (res) {
 
 				nbDownloads = 2 + trek.properties.children.length * 2;
 
 				var myPopup = $ionicPopup.show({
+					title: translations['trek_preview.downloading'],
 					template: '<div id="loading_bar_container"><div id="loading_bar" style="width: {{ loading }}"></div></div>',
-					title: 'Téléchargement en cours',
 					scope: $scope
 				});
 
@@ -32,7 +32,7 @@ function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionic
 						$timeout(function () {
 							$rootScope.$emit('treksChanged', {});
 							$ionicPopup.alert({
-								template: 'Téléchargement terminé'
+								template: translations['trek_preview.downloaded']
 							}).then(function (res) {
 								$ionicHistory.nextViewOptions({	disableBack: true });
 								$state.go('root.detailed_trek', { trekId: trek.id });
@@ -55,12 +55,6 @@ function trekPreviewController($ionicHistory, $state, $rootScope, $scope, $ionic
 	$scope.trek = trek;
 }
 
-function checkTrekController($state, $stateParams, isTrekDownloaded) {
-
-	$state.go(isTrekDownloaded ? 'root.detailed_trek' : 'root.trek_preview', { trekId : $stateParams.trekId });
-}
-
 module.exports = {
-	trekPreviewController: trekPreviewController,
-	checkTrekController: checkTrekController
+	trekPreviewController: trekPreviewController
 };

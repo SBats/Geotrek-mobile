@@ -1,11 +1,11 @@
 'use strict';
 
-function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, $timeout, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksFactory) {
+function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, $timeout, translations, constants, settings, utils, FiltersFactory, LanguageService, InitService, TreksFactory) {
 
 	function clearAndReload() {
 		$ionicHistory.clearCache();
 		$ionicPopup.alert({
-			template: 'Langue changée'
+			template: translations['user_settings.lang_changed']
 		}).then(function (res) {
 			$state.go($state.current, {}, {reload: true});					
 		});
@@ -16,8 +16,8 @@ function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, 
 	});
 	$scope.changeInterfaceLang = function (lang) {
 		$ionicPopup.confirm({
-			title: 'Changement de langue',
-			template: 'Etes vous sur de vouloir changer la langue de l\'interface ?'
+			title: translations['user_settings.change_lang'],
+			template: translations['user_settings.confirm_change_lang_interface']
 		}).then(function (res) {
 
 			if (res) {						
@@ -33,8 +33,8 @@ function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, 
 	});
 	$scope.changeTreksLang = function (lang) {
 		$ionicPopup.confirm({
-			title: 'Changement de langue',
-			template: 'Etes vous sur de vouloir changer la langue des données ?'
+			title: translations['user_settings.change_lang'],
+			template: translations['user_settings.confirm_change_lang_data']
 		}).then(function (res) {
 
 			if (res) {
@@ -75,14 +75,14 @@ function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, 
 		var promises = [];
 
 		$ionicPopup.confirm({
-			title: 'Supprimer les données',
-			template: 'Etes vous sur de vouloir supprimer les données téléchargées ?'
+			title: translations['user_settings.delete_data'],
+			template: translations['user_settings.confirm_delete_data']
 		}).then(function (res) {
 
 			if (res) {
 				var myPopup = $ionicPopup.show({
-					template: 'Suppression en cours',
-					title: 'Supression',
+					title: translations['user_settings.deleting'],
+					template: translations['user_settings.deleting_data'],
 					scope: $scope
 				});
 				TreksFactory.getDownloadedTreks().then(function (treks) {
@@ -94,10 +94,12 @@ function userSettingsController($q, $state, $scope, $ionicPopup, $ionicHistory, 
 					$q.all(promises).then(function (res) {
 						$timeout(function () {
 							myPopup.close();
-							$ionicPopup.alert({
-								template: 'Données supprimées'
-							});
-						}, 1000);
+							$timeout(function () {
+								$ionicPopup.alert({
+									template: translations['user_settings.data_deleted']
+								});
+							}, 200);
+						}, 200);
 					});
 				});
 			}

@@ -5,11 +5,11 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 	/**
 	 * Check for updates for each downloaded trek's specific files
 	 */
-	function updateTreks() {
+	function updateTreks(translations) {
 		var deferred = $q.defer();
 		var promises = [];
 
-		deferred.notify('init.updating_treks');
+		deferred.notify(translations['init.updating_treks']);
 		TreksFactory.getDownloadedTreks().then(function (treks) {
 
 			angular.forEach(treks, function (trek) {
@@ -32,7 +32,7 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 
 		function onDeviceReady() {
 
-			deferred.notify('init.loading_translations');
+			deferred.notify(translations['init.loading_translations']);
 			LanguageService.applyTreksLang().then(function (res) {
 				LanguageService.applyInterfaceLang();
 
@@ -46,16 +46,16 @@ function initService($state, $q, $cordovaNetwork, $cordovaFile, settings, consta
 					if ($cordovaNetwork.getNetwork === 'wifi' || window.localStorage.syncMode === 'all') {
 
 						// Downloads the .zip containing the main geojson and the tiles
-						deferred.notify('init.loading_treks');
+						deferred.notify(translations['init.loading_treks']);
 						utils.downloadAndUnzip(settings.globalTrekZipUrl, settings.treksDir + '/' + constants.GLOBAL_DIR, constants.GLOBAL_ZIP)
 						.then(function (downloadRes) {
 
-							deferred.notify('init.loading_tiles');
+							deferred.notify(translations['init.loading_tiles']);
 							utils.downloadAndUnzip(settings.globalTilesZipUrl, settings.tilesDir + '/' + constants.GLOBAL_DIR, constants.GLOBAL_ZIP)
 							.then(function (downloadRes) {
 
 								updateTreks(translations).then(function (res) {
-									deferred.notify('init.done');
+									deferred.notify(translations['init.done']);
 									deferred.resolve(constants.CONNECTED_REDIRECTION);
 								});
 							}, function (error) {
