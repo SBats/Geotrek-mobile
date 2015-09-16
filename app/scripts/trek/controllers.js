@@ -104,8 +104,8 @@ geotrekTreks.controller('TrekController',
 
 }])
 .controller('TrekDetailController',
-    ['$rootScope', '$state', '$scope', '$ionicModal', '$q', 'mapFactory', '$ionicPopup', '$stateParams', '$window', '$translate', '$sce', 'trek', 'pois', 'utils', 'socialSharingService', 'treksFactory', 'poisFactory', 'userSettingsService',
-    function ($rootScope, $state, $scope, $ionicModal, $q, mapFactory, $ionicPopup, $stateParams, $window, $translate, $sce, trek, pois, utils, socialSharingService, treksFactory, poisFactory, userSettingsService) {
+    ['$rootScope', '$state', '$scope', '$ionicModal', '$q', 'mapFactory', 'globalSettings', '$ionicPopup', '$disqus', '$stateParams', '$window', '$translate', '$sce', 'trek', 'pois', 'utils', 'socialSharingService', 'treksFactory', 'poisFactory', 'userSettingsService',
+    function ($rootScope, $state, $scope, $ionicModal, $q, mapFactory, globalSettings, $ionicPopup, $disqus, $stateParams, $window, $translate, $sce, trek, pois, utils, socialSharingService, treksFactory, poisFactory, userSettingsService) {
 
     $scope.network_available = $rootScope.network_available;
 
@@ -113,6 +113,11 @@ geotrekTreks.controller('TrekController',
 
     $scope.trekId = $stateParams.trekId;
     $scope.trek = trek;
+
+    if ($disqus.getShortname()) {
+        $scope.disqusId = 'trek-' + trek.id;
+    }
+
     // We need to declare our json HTML data as safe using $sce
     $scope.teaser = $sce.trustAsHtml(trek.properties.description_teaser);
     $scope.mainDescription = $sce.trustAsHtml(trek.properties.description);

@@ -6,7 +6,7 @@ var geotrekApp = angular.module('geotrekMobileApp',
     ['ionic', 'ngResource', 'ngSanitize', 'ui.router', 'ui.bootstrap.buttons', 'geotrekTreks',
      'geotrekPois', 'geotrekMap', 'geotrekInit', 'geotrekGeolocation', 'ngCordova',
      'geotrekGlobalization', 'geotrekAppSettings', 'geotrekUserSettings', 'geotrekStaticPages',
-     'angular-google-analytics', 'geotrekLog', 'geotrekNotification',
+     'angular-google-analytics', 'geotrekLog', 'geotrekNotification', 'ngDisqus',
      // angular-translate module for i18n/l10n (http://angular-translate.github.io/)
      'pascalprecht.translate']);
 
@@ -31,16 +31,20 @@ ionic.Platform.ready(function() {
 
 });
 
-geotrekApp.config(['$urlRouterProvider', '$compileProvider',
-    function($urlRouterProvider, $compileProvider) {
+geotrekApp.config(['$urlRouterProvider', '$compileProvider', '$locationProvider', '$disqusProvider', 'globalSettings', 'AnalyticsProvider',
+    function($urlRouterProvider, $compileProvider, $locationProvider, $disqusProvider, globalSettings, AnalyticsProvider) {
+
+    $locationProvider.hashPrefix('!');
 
     // Root url is defined in init module
     $urlRouterProvider.otherwise('/trek');
 
     // Add cdvfile to allowed protocols in ng-src directive
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|blob|cdvfile):|data:image\//);
-}])
-.config(['AnalyticsProvider', 'globalSettings', function (AnalyticsProvider, globalSettings) {
+
+    if (globalSettings.DISQUS_SHORTNAME) {
+        $disqusProvider.setShortname(globalSettings.DISQUS_SHORTNAME);
+    }
 
     if (globalSettings.GOOGLE_ANALYTICS_ID) {
         if (!window.cordova) {

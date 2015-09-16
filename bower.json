@@ -11,6 +11,7 @@
     "angular-animate": "~1.2.16",
     "angular-sanitize": "~1.2.16",
     "angular-google-analytics": "^0.0.15",
+    "angular-disqus": "git://github.com/makinacorpus/angular-disqus.git#master",
     "ionic": "1.0.0-beta.9",
     "ngCordova": "~0.1.2-alpha",
     "angular-translate": "~2.2.0",

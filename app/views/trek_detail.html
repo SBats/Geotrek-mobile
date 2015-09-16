@@ -190,6 +190,12 @@
                 </div>
             </ion-item>
 
+            <h2 class="trek-detail__section-title">{{ 'trek_detail.comments' | translate }}</h2>
+
+            <ion-item id="disqus-comments" ng-if="disqusId">
+                <div disqus="disqusId"></div>
+            </ion-item>
+
         </div>
 
     </ion-content>
