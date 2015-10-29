@@ -10,17 +10,16 @@ var geotrekAppSettings = angular.module('geotrekAppSettings', []);
 // settings is a factory, we cannot use it in other modules config part,
 // so we put in globalSettings some project constants.
 geotrekAppSettings.constant('globalSettings', {
-    DEFAULT_LANGUAGE: 'en',
-    AVAILABLE_LANGUAGES: ['fr', 'en'],
-    DOMAIN_NAME: '',
-    GOOGLE_ANALYTICS_ID: '',
-    APP_NAME: 'Geotrek Rando'
+    DEFAULT_LANGUAGE: 'fr',
+    AVAILABLE_LANGUAGES: ['fr'],
+    DOMAIN_NAME: 'http://rando.loire-atlantique.fr/data',
+    GOOGLE_ANALYTICS_ID: 'UA-46270573-6',
+    APP_NAME: 'Rando Loire-Atlantique'
 })
-.factory('settings', function () {
+.factory('settings', function (globalSettings) {
 
     // Variables that user can change
-    var DOMAIN_NAME = '',
-        PUBLIC_WEBSITE = '',
+    var PUBLIC_WEBSITE = 'http://rando.loire-atlantique.fr',
         API_FOLDER = 'api',
         FORCE_DOWNLOAD = false,
         DEBUG = false,
@@ -37,12 +36,14 @@ geotrekAppSettings.constant('globalSettings', {
         GLOBAL_MAP_DL_TILES_ZOOM: 12,
         GLOBAL_MAP_DEFAULT_MIN_ZOOM: 8,
         GLOBAL_MAP_DEFAULT_MAX_ZOOM: 16,
-        BACKGROUND_URL: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        GLOBAL_MAP_ATTRIBUTION: '(c) osm',
+        BACKGROUND_URL: 'http://rando.loire-atlantique.fr/tiles?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.CLASSIQUE&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={    z}&TILEROW={y}&TILECOL={x}',
+        GLOBAL_MAP_ATTRIBUTION: '(c) IGN Geoportail',
         TREK_COLOR: '#aec900',
-        HIGHLIGHT_DETAIL_LINEAR: false,
+        HIGHLIGHT_DETAIL_LINEAR: true,
         HIGHLIGHT_COLOR: '#000000'
     };
+
+    var DETAIL_COLLAPSER_DEFAULT_OPENED = []; // can contains 'children', 'parent', 'poi', 'touristic' or be empty;
 
     /* Variables for filesystem tree on device
      * FileSystem is created as follows:
@@ -80,7 +81,7 @@ geotrekAppSettings.constant('globalSettings', {
         TREKS_ZIP_NAME = 'global.zip',
         TILES_FILE_NAME = 'global.zip';
 
-    var GEOTREK_DIR = 'geotrek-rando',
+    var GEOTREK_DIR = 'rando-loire-atlantique',
         API_DIR = 'api',
         LANG_DIR = 'fr',
         MEDIA_DIR = 'media',
@@ -88,7 +89,7 @@ geotrekAppSettings.constant('globalSettings', {
         PAPERCLIP_DIR = 'paperclip',
         MEDIA_TREK_DIR = 'trekking_trek',
         MEDIA_POI_DIR = 'trekking_poi',
-        LOGS_FILENAME = 'geotrek-rando.log',
+        LOGS_FILENAME = 'rando-loire-atlantique.log',
         TILES_DIR = 'tiles',
         TREK_DIR = 'treks',
         POI_DIR = 'poi',
@@ -117,7 +118,6 @@ geotrekAppSettings.constant('globalSettings', {
         RELATIVE_STATIC_PAGES_IMG_ROOT = RELATIVE_STATIC_PAGES_ROOT + '/' + STATIC_PAGES_IMAGES_DIR;
 
     return {
-        DOMAIN_NAME: DOMAIN_NAME,
         PUBLIC_WEBSITE: PUBLIC_WEBSITE,
         API_FOLDER: API_FOLDER,
         POI_FILE_NAME: POI_FILE_NAME,
@@ -131,9 +131,9 @@ geotrekAppSettings.constant('globalSettings', {
         DEBUG: DEBUG,
         ACTIVE_ELEVATION: ACTIVE_ELEVATION,
         remote: {
-            TILES_REMOTE_PATH_URL: DOMAIN_NAME + '/zip/tiles',
+            TILES_REMOTE_PATH_URL: globalSettings.DOMAIN_NAME + '/zip/tiles',
             //TILES_REMOTE_PATH_URL: "http://192.168.100.18:8888/files/tiles",
-            MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: DOMAIN_NAME + '/zip/tiles/global.zip',
+            MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: globalSettings.DOMAIN_NAME + '/zip/tiles/global.zip',
             //MAP_GLOBAL_BACKGROUND_REMOTE_FILE_URL: "http://192.168.100.18:8888/files/tiles/global.zip",
             //FULL_DATA_REMOTE_FILE_URL: "http://192.168.100.18:8888/fr/files/api/trek/trek.zip",
             LEAFLET_BACKGROUND_URL: leaflet_conf.BACKGROUND_URL
@@ -187,15 +187,21 @@ geotrekAppSettings.constant('globalSettings', {
                 { id: 1000, name: '>1000m', interval: [1001, 99999] },
             ],
             eLength :  [
-                { id: 0, name: '<10km', interval: [0, 10000] },
-                { id: 5000, name: '10km-20km', interval: [10001, 20000] },
-                { id: 10000, name: '20km-30km', interval: [20001, 30000] },
-                { id: 15000, name: '30km-40km', interval: [30001, 40000] },
-                { id: 40000, name: '>40km', interval: [40001, 99999] },
+                { id: 0, name: '<5km', interval: [0, 5000] },
+                { id: 5000, name: '5km-10km', interval: [5001, 10000] },
+                { id: 10000, name: '10km-15km', interval: [10001, 15000] },
+                { id: 15000, name: '15km-20km', interval: [15001, 20000] },
+                { id: 20000, name: '20km-25km', interval: [20001, 25000] },
+                { id: 25000, name: '25km-30km', interval: [25001, 30000] },
+                { id: 30000, name: '30km-35km', interval: [30001, 35000] },
+                { id: 35000, name: '35km-40km', interval: [35001, 40000] },
+                { id: 40000, name: '40km-45km', interval: [40001, 45000] },
+                { id: 45000, name: '>45km', interval: [45001, 99999] },
             ]
-        }
+        },
+        DETAIL_COLLAPSER_DEFAULT_OPENED: DETAIL_COLLAPSER_DEFAULT_OPENED
     };
-}).service('globalizationSettings', [ 'globalizationFactory', 'settings', '$q', function(globalizationFactory, settings, $q){
+}).service('globalizationSettings', [ 'globalizationFactory', 'globalSettings', '$q', function(globalizationFactory, globalSettings, $q){
     var self = this;
 
     self.I18N_PREFIX;
@@ -205,10 +211,10 @@ geotrekAppSettings.constant('globalSettings', {
 
     this.setPrefix = function(i18n_prefix){
         self.I18N_PREFIX = i18n_prefix
-        self.TREK_REMOTE_FILE_URL = settings.DOMAIN_NAME + '/api/' + self.I18N_PREFIX + '/treks.geojson';
-        self.TREK_REMOTE_FILE_URL_BASE = settings.DOMAIN_NAME + '/' + 'zip/treks' + '/' + self.I18N_PREFIX;
-        self.TREK_REMOTE_API_FILE_URL_BASE = settings.DOMAIN_NAME + '/' + 'api/' + self.I18N_PREFIX + '/treks';
-        self.FULL_DATA_REMOTE_FILE_URL = settings.DOMAIN_NAME + '/' + 'zip/treks' + '/' + self.I18N_PREFIX + '/global.zip';
+        self.TREK_REMOTE_FILE_URL = globalSettings.DOMAIN_NAME + '/api/' + self.I18N_PREFIX + '/treks.geojson';
+        self.TREK_REMOTE_FILE_URL_BASE = globalSettings.DOMAIN_NAME + '/' + 'zip/treks' + '/' + self.I18N_PREFIX;
+        self.TREK_REMOTE_API_FILE_URL_BASE = globalSettings.DOMAIN_NAME + '/' + 'api/' + self.I18N_PREFIX + '/treks';
+        self.FULL_DATA_REMOTE_FILE_URL = globalSettings.DOMAIN_NAME + '/' + 'zip/treks' + '/' + self.I18N_PREFIX + '/global.zip';
     }
 
     this.setDefaultPrefix = function(){
