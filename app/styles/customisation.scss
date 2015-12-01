@@ -97,6 +97,7 @@
 
 .splashscreen {
     background-image: url('../images/custom/background-loading.png');
+    background-size: contain !important;
 }
 .bar-header .button-menu {
     margin-left: -10px;
