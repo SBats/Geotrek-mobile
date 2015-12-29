@@ -108,6 +108,7 @@ img.rules-picture {
 	> div {
 		display: inline-block;
   		vertical-align: middle;
+        white-space: nowrap;
   		&:first-child {
   			margin-right: 0.6rem;
   		}
@@ -122,6 +123,9 @@ img.rules-picture {
   			color: inherit;
   			font-size: 2rem;
   		}
+        span {
+            white-space: nowrap;
+        }
 	}
 }
 
